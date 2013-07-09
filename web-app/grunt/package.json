@@ -1,0 +1,25 @@
+{
+    "name": "mLogger",
+    "version": "0.0.1",
+    "author": {
+        "name": "Martin Micunda",
+        "url": "http://martinm.net/"
+    },
+    "homepage": "git@github.com:martinmicunda/mlogger.git",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:martinmicunda/mlogger.git"
+    },
+    "bugs": {
+      "url": "https://github.com/martinmicunda/mlogger/issues"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "grunt": "0.4.1",
+        "grunt-contrib-watch": "0.4.4",
+        "grunt-contrib-jshint": "0.6.0"
+    },
+    "engines": {
+        "node": ">= 0.8.0"
+    }
+}

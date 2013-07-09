@@ -1,0 +1,1 @@
+here should be karma, gradle, testacular etc config foles
