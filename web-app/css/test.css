@@ -78,6 +78,7 @@ nav#navSideBar ul.nav li {
     background-position: center bottom;
     background-repeat: repeat-x;
     font-size: 14px;
+    padding-right: 10px;
 }
 nav#navSideBar ul.nav li a {
     color: #E7E7E7;
@@ -261,17 +262,17 @@ fieldset, .property-list {
     text-align: right;
     width: 25%;
 }
-label {
-    cursor: pointer;
-    display: inline-block;
-    margin: 0 10px 0 0;
-}
-input, select, textarea {
-    background-color: #FCFCFC;
-    border: 1px solid #CCCCCC;
-    font-size: 1em;
-    padding: 0.2em 0.4em;
-}
+/*label {*/
+    /*cursor: pointer;*/
+    /*display: inline-block;*/
+    /*margin: 0 10px 0 0;*/
+/*}*/
+/*input, select, textarea {*/
+    /*background-color: #FCFCFC;*/
+    /*border: 1px solid #CCCCCC;*/
+    /*font-size: 1em;*/
+    /*padding: 0.2em 0.4em;*/
+/*}*/
 
 .buttons .delete, .buttons .edit, .buttons .save {
     background-position: 0.7em center;

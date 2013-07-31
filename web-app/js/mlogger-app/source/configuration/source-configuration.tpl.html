@@ -1,0 +1,30 @@
+<div style="margin: 10px auto;width: 976px;" ng-controller="SourceConfigurationCtrl">
+    <section id="logPageSection" style="">
+        <header class="sectionHeader"><h2>Data Configuration</h2></header>
+        <article class="sectionArticleContent" id="log">
+            <form ng-upload action="/mlogger/upload-full-form">
+                <label class="inline"> Data Source: </label>
+                <select ng-model="source.host" ng-options="host as host.host for host in hosts" required>
+                    <option value="">-- chose source --</option>
+                </select>
+
+                <label class="inline"> Data Type: </label>
+                <select ng-model="source.type" ng-options="type as type.type for type in types" required>
+                    <option value="">-- chose type --</option>
+                </select>
+
+                <label class="inline"> Path: </label>
+                <input type="file" name="file" required/>
+
+                <label class="inline"> Source Name: </label>
+                <input ng-model="source.name" type="text" placeholder="Source Name" required>
+
+                <br /> <br />
+                <a class="btn btn-small" href="#/">Cancel</a>
+                <button class="btn-success btn-small"  upload-submit="uploadComplete(content, completed)">Preview</button>
+                <button class="btn-small btn-success" ng-click="createSource(source)">Save</button>
+
+            </form>
+        </article>
+    </section>
+</div>

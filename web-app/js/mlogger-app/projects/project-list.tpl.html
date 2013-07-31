@@ -1,0 +1,13 @@
+<input type="text" ng-model="search" class="search-query" placeholder="Search Projects">
+<ul class="nav">
+    <div ng-repeat="project in projects | filter:search | orderBy:'name'">
+        <li ng-click="viewSources(project)" style="cursor:pointer; display: block; width: 75%; float: left;">
+            {{project.name}}
+        </li>
+        <span style="float: right;">
+            <img src="static/images/skin/pencil.png" alt="add" ng-click="editProject('edit', project)" style="margin-left: 1px; margin-top: 5px; cursor:pointer; "/>
+            <img src="static/images/skin/delete.png" alt="add" ng-click="editProject('delete', project)" style="margin-left: 5px; margin-top: 5px; cursor:pointer;"/>
+        </span>
+        <div style="clear:both;"></div>
+    </div>
+</ul>

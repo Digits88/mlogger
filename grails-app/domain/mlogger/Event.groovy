@@ -2,14 +2,12 @@ package mlogger
 
 import org.bson.types.ObjectId
 
-class Source {
+class Event {
 
     ObjectId id
-    String name
-    String host
+    int lineNumber
 
-
-    static belongsTo = [project: Project]
+    static belongsTo = [source: Source]
 
     static constraints = {
     }

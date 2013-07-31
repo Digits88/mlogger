@@ -43,29 +43,30 @@
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  		<title><g:layoutTitle default="mLogger"/></title>
+  		%{--<title><g:layoutTitle default="mLogger"/></title>--}%
   		<meta name="viewport" content="width=device-width, initial-scale=1.0">
   		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
   		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
   		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
   		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
-
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
   		<g:layoutHead/>
         <r:require modules="application"/>
   		<r:layoutResources />
     </head>
-    <body>
+    <body ng-app="mloggerApp">
         <g:if env="development">
             <!-- livereload snippet -->
             <script src="http://localhost:35729/livereload.js"></script>
         </g:if>
         <!-- the header and navigation -->
         <header role="banner" id="header">
-            <h1 id="logo">MLogger</h1>
+            <h1 id="logo">mLogger</h1>
             <nav role="navigation" id="mainNavBar">
                 <ul id="mainNav">
-                    <li><g:link controller="logViewer" action="index">Log Viewer4</g:link></li>
-                    <li><a href="#" class="selected">Parent 02</a>
+                    <li><a href="/mlogger/">Home</a></li>
+                    <li><g:link controller="logViewer" action="index">Log Viewer</g:link></li>
+                    <li><g:link controller="project" action="index" class="selected">Projects</g:link></li>
                         <ul>
                             <li><a href="#">Item 01</a></li>
                             <li><a href="#" class="selected">Item 02</a></li>
@@ -86,41 +87,10 @@
                 <div class="clear"></div>
             </nav>
         </header>
-        <!-- the content -->
-        %{--<header style="border: 1px red solid; width: 100%; height: 100px;">--}%
-          %{--<h1><a href="#">MLogger</a></h1>--}%
-        %{--</header>--}%
-        %{--<nav style="border: 1px green solid; width: 100%; height: 50px;">--}%
-            %{--<ul>--}%
-                %{--<li><a href="#">Home</a></li>--}%
-                %{--<li><a href="#">About</a></li>--}%
-                %{--<li><a href="#">Blog</a></li>--}%
-                %{--<li><a href="#">Contact</a></li>--}%
-            %{--</ul>--}%
-        %{--</nav>--}%
 
   		<g:layoutBody/>
         <footer id="pageFooter">&copy; Martin Micunda</footer>
-<r:script type="text/javascript">
-        $(document).ready(function () {
-
-        $('#mainNav li').hover(
-            function () {
-                //show its submenu
-                $('ul', this).stop().slideDown(100);
-
-            },
-            function () {
-                //hide its submenu
-                $('ul', this).stop().slideUp(100);
-            }
-        );
-
-        });
-        </r:script>
-
   		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
   		<r:layoutResources />
     </body>
-
 </html>

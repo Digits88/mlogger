@@ -6,12 +6,14 @@ class Project {
 
     ObjectId id
     String name
-    List<Source> sources
-
-    static embedded = ['sources']
-
-    static mapWith = "mongo"
+    static hasMany = [sources: Source]
+//    List<Source> sources
+//
+//    static embedded = ['sources']
+//
+//    static mapWith = "mongo"
 
     static constraints = {
+        sources reference:false
     }
 }

@@ -1,62 +1,108 @@
 package mlogger
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
+import javax.servlet.http.HttpServletResponse
+import org.bson.types.ObjectId
 
 class ProjectController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+    def beforeInterceptor = {
+        log.info ">>> ${actionName}"
+        log.info "    uri ${actionUri}"
+        params.each {param -> log.info "    ${param.key} = ${param.value}"
+        }
+    }
+
+    def afterInterceptor = {
+        log.info "<<< ${actionName}"
+    }
 
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        [projectInstanceList: Project.list(params), projectInstanceTotal: Project.count()]
-    }
+//        params.max = Math.min(max ?: 10, 100)
+//        [projectInstanceList: Project.list(params), projectInstanceTotal: Project.count()]
 
-    def create() {
-        [projectInstance: new Project(params)]
+//        def pageInstance = Project.collection.find()
+//        def items = []
+//        try {
+//            while (pageInstance.hasNext()) {
+//                items << com.mongodb.util.JSON.serialize(pageInstance.next())
+//            }
+//        } finally {
+//            pageInstance.close()
+//        }
+//        render contentType: 'application/json', text: items
+
+        def projectJsonList = []
+        Project.collection.find().each { log ->
+            projectJsonList << log
+        }
+        render contentType: "application/json", text: projectJsonList
     }
 
     def save() {
+        if (!request.JSON) {
+            log.error "Not Acceptable error when parsing JSON"
+            // TODO: create some wrapper for this as this should be in every save and update method
+            response.sendError HttpServletResponse.SC_NOT_ACCEPTABLE
+            render (["message": "Not Acceptable error when parsing JSON"] as JSON)
+            return
+        }
+
         def projectInstance = new Project(params)
         if (!projectInstance.save(flush: true)) {
-            render(view: "create", model: [projectInstance: projectInstance])
+            log.error projectInstance.errors
+            response.sendError HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            render (["message": projectInstance.errors] as JSON)
             return
         }
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
-        redirect(action: "show", id: projectInstance.id)
+        log.info message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
+        response.setStatus HttpServletResponse.SC_CREATED
+        render (["message": message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])] as JSON)
     }
 
-    def show(Long id) {
-        def projectInstance = Project.get(id)
+    def delete(String id) {
+        def projectInstance = Project.get(new ObjectId(id))
         if (!projectInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "list")
+            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
             return
         }
 
-        [projectInstance: projectInstance]
+        try {
+            projectInstance.delete(flush: true)
+            log.info message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_OK
+            render (["message": message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+        }
+        catch (DataIntegrityViolationException e) {
+            log.warn message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_CONFLICT
+            render (["message": message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+        }
     }
 
-    def edit(Long id) {
-        def projectInstance = Project.get(id)
-        if (!projectInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "list")
+    def update(String id, Long version) {
+        if (!request.JSON) {
+            log.error "Not Acceptable error when parsing JSON"
+            // TODO: create some wrapper for this as this should be in every save and update method
+            response.sendError HttpServletResponse.SC_NOT_ACCEPTABLE
+            render (["message": "Not Acceptable error when parsing JSON"] as JSON)
             return
         }
 
-        [projectInstance: projectInstance]
-    }
-
-    def update(Long id, Long version) {
-        def projectInstance = Project.get(id)
+        def projectInstance = Project.get(new ObjectId(id))
         if (!projectInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "list")
+            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
             return
         }
 
@@ -65,7 +111,9 @@ class ProjectController {
                 projectInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
                           [message(code: 'project.label', default: 'Project')] as Object[],
                           "Another user has updated this Project while you were editing")
-                render(view: "edit", model: [projectInstance: projectInstance])
+                log.warn "Another user has updated this Project while you were editing"
+                response.sendError HttpServletResponse.SC_CONFLICT
+                render (["message": "Another user has updated this Project while you were editing"] as JSON)
                 return
             }
         }
@@ -73,30 +121,14 @@ class ProjectController {
         projectInstance.properties = params
 
         if (!projectInstance.save(flush: true)) {
-            render(view: "edit", model: [projectInstance: projectInstance])
+            log.error projectInstance.errors
+            response.sendError HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            render (["message": projectInstance.errors] as JSON)
             return
         }
 
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
-        redirect(action: "show", id: projectInstance.id)
-    }
-
-    def delete(Long id) {
-        def projectInstance = Project.get(id)
-        if (!projectInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "list")
-            return
-        }
-
-        try {
-            projectInstance.delete(flush: true)
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
-            redirect(action: "show", id: id)
-        }
+        log.info message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
+        response.setStatus HttpServletResponse.SC_OK
+        render (["message": message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])] as JSON)
     }
 }
