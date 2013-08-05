@@ -7,7 +7,6 @@ import org.bson.types.ObjectId
 
 class ProjectController {
 
-
     def beforeInterceptor = {
         log.info ">>> ${actionName}"
         log.info "    uri ${actionUri}"
@@ -67,28 +66,6 @@ class ProjectController {
         render (["message": message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])] as JSON)
     }
 
-    def delete(String id) {
-        def projectInstance = Project.get(new ObjectId(id))
-        if (!projectInstance) {
-            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
-            response.setStatus HttpServletResponse.SC_NOT_FOUND
-            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
-            return
-        }
-
-        try {
-            projectInstance.delete(flush: true)
-            log.info message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
-            response.setStatus HttpServletResponse.SC_OK
-            render (["message": message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
-        }
-        catch (DataIntegrityViolationException e) {
-            log.warn message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
-            response.setStatus HttpServletResponse.SC_CONFLICT
-            render (["message": message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
-        }
-    }
-
     def update(String id, Long version) {
         if (!request.JSON) {
             log.error "Not Acceptable error when parsing JSON"
@@ -130,5 +107,27 @@ class ProjectController {
         log.info message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])
         response.setStatus HttpServletResponse.SC_OK
         render (["message": message(code: 'default.updated.message', args: [message(code: 'project.label', default: 'Project'), projectInstance.id])] as JSON)
+    }
+
+    def delete(String id) {
+        def projectInstance = Project.get(new ObjectId(id))
+        if (!projectInstance) {
+            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+            return
+        }
+
+        try {
+            projectInstance.delete(flush: true)
+            log.info message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_OK
+            render (["message": message(code: 'default.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+        }
+        catch (DataIntegrityViolationException e) {
+            log.warn message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])
+            response.setStatus HttpServletResponse.SC_CONFLICT
+            render (["message": message(code: 'default.not.deleted.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+        }
     }
 }

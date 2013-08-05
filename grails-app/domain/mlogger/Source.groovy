@@ -6,8 +6,12 @@ class Source {
 
     ObjectId id
     String name
-    String host
-
+//    String host
+//    String source
+//    String dataType
+//    Integer countEvent
+//    Date earliestEvent
+//    Date lastEvent
 
     static belongsTo = [project: Project]
 

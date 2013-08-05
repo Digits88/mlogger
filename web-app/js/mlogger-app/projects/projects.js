@@ -4,7 +4,7 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-        .when('/new', {controller: 'ProjectCtrl', template:'<p>martin</p>'})
+        .when('/projects/:projectId/sources', {controller: 'ProjectCtrl'})
         .when('/projects', {
             templateUrl: 'static/js/mlogger-app/projects/projects.html',
             controller: 'ProjectCtrl'
@@ -24,7 +24,8 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
 //        })
     }])
 
-    .controller('ProjectCtrl', ['$scope', '$location', 'ProjectFactory', function ($scope, $location, ProjectFactory) {
+    .controller('ProjectCtrl', ['$scope', '$location', 'ProjectFactory', 'Logger', 'SourceFactory', function ($scope, $location, ProjectFactory, Logger, SourceFactory) {
+        var logger = Logger.getLogger('LogViewerCtrl');
 //    $scope.projects = projects;
 //
 //    $scope.viewProject = function (projectId) {
@@ -56,14 +57,6 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
             } else if(action === 'delete') {
                 $scope.projectAction = action;
             }
-        }
-
-        $scope.viewSources = function (project) {
-//            $location.path('/mlogger/projects/'+project._id.$oid+'/sources');
-            ProjectFactory.querySources(project).then(function (projects) {
-//                $location.path('/mlogger/projects').search({projectId: project._id.$oid});
-                $scope.projectSources = projects
-            });
         };
 
         $scope.deleteProject = function(project) {
@@ -84,9 +77,28 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
             });
         };
 
+        $scope.viewSources = function (project) {
+            SourceFactory.queryAll(project).then(function (sources) {
+                $scope.projectNavClicked = true;
+                populateGridData(sources, project);
+//                $location.path('/projects/' + project._id.$oid + '/sources');
+            });
+        };
+
+        $scope.deleteSource = function(project, source) {
+            SourceFactory.delete(project, source).then(function () {
+                SourceFactory.queryAll(project).then(function (sources) {
+                    populateGridData(sources, project);
+                });
+            });
+        };
+
         $scope.viewSourceConfiguration = function(project) {
             $location.path('/projects/'+project._id.$oid+'/source/configuration');
+        };
 
+        $scope.editSource = function(project, source) {
+            $location.path('/projects/'+ project._id.$oid + '/sources/' + source._id.$oid + '/configuration');
         };
 
         // Helpers
@@ -95,6 +107,101 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                 $scope.projects = projects;
                 $scope.projectAction = "cancel";
             });
+        }
+
+        function populateGridData(sources, project) {
+            logger.time('start populate grid data');
+            var rows = [];
+            var header = [
+                {
+                    id: "name",
+                    type: "value",
+                    label: "NAME"
+                },
+                {
+                    id: "host",
+                    type: "value",
+                    label: "HOST"
+                },
+                {
+                    id: "source",
+                    type: "value",
+                    label: "SOURCE"
+                },
+                {
+                    id: "dataType",
+                    type: "value",
+                    label: "DATA TYPE"
+                },
+                {
+                    id: "countEvent",
+                    type: "value",
+                    label: "COUNT EVENT"
+                },
+                {
+                    id: "earliestEvent",
+                    type: "value",
+                    label: "EARLIEST EVENT"
+                },
+                {
+                    id: "lastEvent",
+                    type: "value",
+                    label: "LAST EVENT"
+                },
+                {
+                    id: "pattern",
+                    type: "value",
+                    label: "PATTERN"
+                },
+                {
+                    id: "action",
+                    type: "action",
+                    label: "ACTION"
+                }
+            ];
+
+            _.each(sources, function (source, index) {
+                var cells = [];
+                var head;
+                for (var i = 0; i < header.length; i++) {
+                    head = header[i];
+                    addCell(head, source[head.id], cells);
+                }
+                addRow(cells, index, rows, source)
+            });
+
+            addGridData(header, rows, project);
+            logger.time('finish populate grid data');
+        }
+
+        function addCell(head, value, cells) {
+            var cellValue = {
+                id: {
+                    type: head.type,
+                    header: head.value
+                },
+                value: value
+            };
+
+            cells.push(cellValue);
+        }
+
+        function addRow(cells, rowId, rows, source) {
+            var rowValue = {
+                id: rowId,
+                cells: cells,
+                source: source
+            };
+
+            rows.push(rowValue);
+        }
+
+        function addGridData(headers, rows, project) {
+            $scope.gridData = {
+                    project: project,
+                    headers: headers,
+                    rows: rows
+                };
         }
 
             // Modal Form
@@ -151,17 +258,6 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
             query:function () {
                 var deferred = $q.defer();
                 $http.get("/mlogger/projects")
-                        .success(function (data) {
-                                     deferred.resolve(data);
-                                 })
-                        .error(function (data, status) {
-                                   deferred.reject(new Error('Error loading projects data: ' + status));
-                               });
-                return deferred.promise;
-            },
-            querySources:function (project) {
-                var deferred = $q.defer();
-                $http.get("/mlogger/sources?id=" + project._id.$oid)
                         .success(function (data) {
                                      deferred.resolve(data);
                                  })
@@ -239,20 +335,46 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
         };
     }])
 
-    .directive('mloggerProjectSources', ['$compile', function ($compile) {
+    .directive('mloggerGridCell', ['$compile', function ($compile) {
         return {
-            templateUrl:"static/js/mlogger-app/projects/source-list.tpl.html",
-            replace:true,
-            transclude:false,
             restrict:'EA',
+            replace:false,
             scope:{
-                projects:'=',
-                cancelProject:'=',
-                createProject:'=',
-                deleteProject:"=",
+                cell:'=mloggerGridCell',
+                source:'=',
                 project:'=',
-                projectAction:'=',
-                updateProject:'='
+                editSource:'=',
+                deleteSource:'='
+            },
+            link:function (scope, element, attrs) {
+                var row = scope.row;
+                var cell = scope.cell;
+
+                if (cell.id.type === 'action') {
+                    element.html($compile('<span mlogger-action-cell source="source" project="project" delete-source="deleteSource" edit-source="editSource"></span>')(scope));
+                }
+                else {
+                    element.html($compile('<span>{{ cell.value }}</span>')(scope));
+                }
+
             }
         };
-    }]);
+    }])
+
+    .directive('mloggerActionCell', function () {
+        return {
+            restrict:'A',
+            replace:true,
+            scope:{
+                source:'=',
+                project:'=',
+                editSource:'=',
+                deleteSource:'='
+            },
+            template:'<div>' +
+                     '  <img src="static/images/skin/pencil.png" alt="edit" ng-click="editSource(project, source)" style="cursor:pointer; "/>' +
+                     '  <img src="static/images/skin/delete.png" alt="delete" ng-click="deleteSource(project, source)" style=" cursor:pointer;"/>' +
+                     '</div>'
+        };
+    })
+

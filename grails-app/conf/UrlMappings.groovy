@@ -11,7 +11,8 @@ class UrlMappings {
 //        "/"(controller: "project", action: "index")
 		"500"(view:'/error')
 
-        // Project API
+        // ************ Project API
+        //                          ************
         "/projects"(controller: "project") {
             action = [GET: "list"]
         }
@@ -27,15 +28,28 @@ class UrlMappings {
             action = [DELETE:"delete"]
         }
 
-        // Source API
-        "/sources"(controller: "source", action: "list") {
+        // ************ Source API
+        //                          ************
+        "/projects/$projectId?/sources"(controller: "source", action: "list") {
             action = [GET: "list"]
         }
-        "/upload-full-form"(controller: "source", action:  "preview", parseRequest: true)
 
-        "/source/save"(controller: "source", action:  "save", parseRequest: true) {
-            action = [GET: "unsupported", PUT: "unsupported", DELETE: "unsupported", POST: "save"]
+        "/projects/$projectId?/sources/edit/$id"(controller: "source", action: "edit") {
+            action = [GET: "edit"]
         }
+
+        "/sources"(controller: "source", parseRequest: true) {
+            action = [POST: "save"]
+        }
+        "/source/preview"(controller: "source", parseRequest: true) {
+            action = [POST: "preview"]
+        }
+
+        // TODO: why /projects/$id is not working?
+        "/projects/$projectId?/sources/delete/$id"(controller: "source") {
+            action = [DELETE:"delete"]
+        }
+
 
 //        "/events/$projectId?/$sourceId?/$maxPag?/$offsetPag?"(controller: "logViewer", action:  "list", parseRequest: true)
         "/events"(controller: "logViewer", action:  "list", parseRequest: true)

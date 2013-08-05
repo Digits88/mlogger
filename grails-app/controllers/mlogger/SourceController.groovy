@@ -33,15 +33,21 @@ class SourceController {
 //        render ([sourceInstanceList: Source.findByProject(params), sourceInstanceTotal: Source.count()] as JSON)
 //    }
 
-    def list(String id) {
-        def projectInstance = Project.get(new ObjectId(id))
+    def list(String projectId) {
+        def projectInstance = Project.get(new ObjectId(projectId))
         if (!projectInstance) {
-            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])
+            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), projectId])
             response.setStatus HttpServletResponse.SC_NOT_FOUND
-            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), id])] as JSON)
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), projectId])] as JSON)
             return
         }
-        render Source.findAllByProject(projectInstance) as JSON
+//        render Source.findAllByProject(projectInstance) as JSON
+
+        def projectJsonList = []
+        Source.collection.find(project: new ObjectId(projectId)).each { log ->
+            projectJsonList << log
+        }
+        render contentType: "application/json", text: projectJsonList
     }
 
     def preview() {
@@ -110,57 +116,56 @@ class SourceController {
 //        render text: message(code: 'default.created.message', args: [message(code: 'source.label', default: 'Project'), sourceInstance.id])
 //    }
 
-    def save() {
-        ObjectId objectId = new ObjectId(params.projectId)
-        Project projectInstance = Project.get(objectId)
-        if (!projectInstance) {
-            response.setStatus HttpServletResponse.SC_NOT_FOUND
-            render text: message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.projectId])
-        }
-        log.info"projectInstance " + projectInstance.name
+    def save(String projectId) {
+//        if (!request.JSON) {
+//            log.error "Not Acceptable error when parsing JSON"
+//            // TODO: create some wrapper for this as this should be in every save and update method
+//            response.sendError HttpServletResponse.SC_NOT_ACCEPTABLE
+//            render (["message": "Not Acceptable error when parsing JSON"] as JSON)
+//            return
+//        }
 
+        def projectInstance = Project.get(new ObjectId(projectId))
+        if (!projectInstance) {
+            log.error message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), projectId])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), projectId])] as JSON)
+            return
+        }
 
         def sourceInstance = new Source(name: params.name, host: params.host.host)
-//        if (!sourceInstance.save(flush: true, failOnError: true)) {
-//            response.sendError HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-//            render text: 'Failed to do create project.'
-//        }
+
         log.info"sourceInstance " +sourceInstance
 
         projectInstance.addToSources(sourceInstance)
-        if (!projectInstance.save(flush: true, failOnError: true)) {
+        if (!sourceInstance.save(flush: true)) {
+            log.error projectInstance.errors
             response.sendError HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-            render text: 'Failed to do create project.'
+            render (["message": projectInstance.errors] as JSON)
+            return
         }
 
         projectInstance.sources.each { project ->
             log.info"project " + project.name
         }
 
+        log.info message(code: 'default.created.message', args: [message(code: 'source.label', default: 'Source'), sourceInstance.id])
         response.setStatus HttpServletResponse.SC_CREATED
-        render text: message(code: 'default.created.message', args: [message(code: 'project.label', default: 'Project'), sourceInstance.id])
+        render (["message": message(code: 'default.created.message', args: [message(code: 'source.label', default: 'Source'), sourceInstance.id]), "sourceId": sourceInstance.id.toString()] as JSON)
     }
 
-    def show(Long id) {
-        def sourceInstance = Source.get(id)
+    def edit(String id) {
+//        def sourceInstance = Source.get(id)
+        def sourceInstance = Source.collection.findOne(_id: new ObjectId(id))
         if (!sourceInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])
-            redirect(action: "list")
+            log.error message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])] as JSON)
             return
         }
 
-        [sourceInstance: sourceInstance]
-    }
-
-    def edit(Long id) {
-        def sourceInstance = Source.get(id)
-        if (!sourceInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])
-            redirect(action: "list")
-            return
-        }
-
-        [sourceInstance: sourceInstance]
+        //        [sourceInstance: sourceInstance]
+        render contentType: "application/json", text: sourceInstance
     }
 
     def update(Long id, Long version) {
@@ -192,22 +197,25 @@ class SourceController {
         redirect(action: "show", id: sourceInstance.id)
     }
 
-    def delete(Long id) {
-        def sourceInstance = Source.get(id)
+    def delete(String id) {
+        def sourceInstance = Source.get(new ObjectId(id))
         if (!sourceInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])
-            redirect(action: "list")
+            log.error message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])
+            response.setStatus HttpServletResponse.SC_NOT_FOUND
+            render (["message": message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), id])] as JSON)
             return
         }
 
         try {
             sourceInstance.delete(flush: true)
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])
-            redirect(action: "list")
+            log.info message(code: 'default.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])
+            response.setStatus HttpServletResponse.SC_OK
+            render (["message": message(code: 'default.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])] as JSON)
         }
         catch (DataIntegrityViolationException e) {
-            flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])
-            redirect(action: "show", id: id)
+            log.warn message(code: 'default.not.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])
+            response.setStatus HttpServletResponse.SC_CONFLICT
+            render (["message": message(code: 'default.not.deleted.message', args: [message(code: 'source.label', default: 'Source'), id])] as JSON)
         }
     }
 }

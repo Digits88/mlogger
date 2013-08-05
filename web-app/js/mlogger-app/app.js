@@ -22,7 +22,7 @@ angular.module('mloggerApp', ['log-viewer', 'projects', 'source.configuration'])
                 templateUrl: 'static/js/mlogger-app/projects/projects.html',
                 controller:'ProjectCtrl'
             })
-            .otherwise({redirectTo: '/projects'});
+//            .otherwise({redirectTo: '/projects'});
     }])
 
 //    .constant('APP_ROOT', 'static/js/mlogger-app/');
