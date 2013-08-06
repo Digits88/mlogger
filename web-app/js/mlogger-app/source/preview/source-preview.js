@@ -10,21 +10,21 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             })
     }])
 
-    .controller('SourcePreviewCtrl', ['$scope', '$location', 'SourceFactory', '$routeParams', 'EvenFactory', function ($scope, $location, SourceFactory, $routeParams, EvenFactory) {
+    .controller('SourcePreviewCtrl', ['$scope', '$location', 'SourceFactory', '$routeParams', 'EventFactory', function ($scope, $location, SourceFactory, $routeParams, EventFactory) {
 
         $scope.viewSourceConfiguration = function() {
             $location.path('/projects/'+ $routeParams.projectId + '/sources/' + $routeParams.sourceId + '/configuration');
         };
 
         $scope.source = SourceFactory.getSource();
-        $scope.choice = 3;
+        $scope.choice = 4;
 
         $scope.masks = [
             {
                 id: 1,
                 label: "(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)",
                 regex: "^(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)$",
-                head: ["DATE", "TIME", "THREAD", "LEVEL", "LOGGER", "Diagnostic Context", "MESSAGE"]
+                head: ["DATE", "TIME", "THREAD", "LEVEL", "LOGGER", "Context", "MESSAGE"]
             },
             {
                 id: 2,
@@ -34,16 +34,32 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             },
             {
                 id: 3,
+                label: "(\\S*) - - \\[(.*)] \"....? (\\S*) .*\" (\\d*) ([-0-9]*) (\".*\")",
+                regex: '^(\\S*) - - \\[(.*)] "....? (\\S*) .*" (\\d*) ([-0-9]*) (".*")?',
+                head: ["HOST", "DATE", "HTTP", "STATUS", "SIZE", "AGENT"]
+            },
+            {
+                id: 4,
                 label: "Default",
                 regex: "^(.*)$",
                 head: ["EVENT"]
+            },
+            {
+                id: 5,
+                label: '^(\\S+) \\S+ \\S+ \\[(.*?)\\] "(\\S+).*?" \\d+ \\d+ "(.*?)" "(.*?)"',
+                regex: '^(\\S+) \\S+ \\S+ [(.*?)] "(\\S+).*?" \\d+ \\d+ "(.*?)" "(.*?)"',
+                head: ['HOST','TIME','PATH','CODE','BYTES','REFERER', 'USER_AGENT']
             }
         ];
 
-        $scope.addEvent = function (content, completed) {
-            if (completed && content) {
-                createSource(content)
-            }
+        $scope.addEvent = function () {
+            $scope.eventsDetail = {};
+            $scope.eventsDetail.mask = $scope.maskSelected;
+            $scope.eventsDetail.head = $scope.eventsDetail.mask.head;
+            $scope.eventsDetail.sourceId = $routeParams.sourceId;
+            EventFactory.save($scope.eventsDetail).then(function (data) {
+                $location.path('/');
+            });
         };
 
         $scope.heads = ["EVENT"];
@@ -54,9 +70,8 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
         $scope.watchRadioButtonChange = function(newValue) {
             var mask = _.filter($scope.masks, function(obj){ return obj.id == newValue; });
             var rows = [];
-
+            $scope.maskSelected = mask[0];
             _.each($scope.source.logs, function (log, index) {
-//                var dd = mask[0].regex.replace("\\\\", "\\");
                 var regex = new RegExp(mask[0].regex);
                 var matches = log.match(regex);
                 if(!_.isUndefined(matches) && !_.isNull(matches)) {
@@ -72,7 +87,7 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             $scope.source.mask = mask[0];
         };
 
-        $scope.watchRadioButtonChange(3);
+        $scope.watchRadioButtonChange(4);
 
         function addCell(type, value, cells) {
             var cellValue = {
@@ -102,52 +117,19 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
         }
     }])
 
-    .factory('EvenFactory', function ($q, $http) {
+    .factory('EventFactory', function ($q, $http) {
         return {
-            delete:function (project) {
-                var deferred = $q.defer();
-                $http.delete("/mlogger/project/delete?id=" + project._id.$oid)
-                    .success(function (data) {
-                                 deferred.resolve(data);
-                             })
-                    .error(function (data, status) {
-                               deferred.reject(new Error('Error deleting project data: ' + status));
-                           });
-                return deferred.promise;
-            },
-            update:function (project) {
-                var deferred = $q.defer();
-                $http.put("/mlogger/project/update", project)
-                    .success(function (data) {
-                                 deferred.resolve(data);
-                             })
-                    .error(function (data, status) {
-                               deferred.reject(new Error('Error updating project data: ' + status));
-                           });
-                return deferred.promise;
-            },
             save:function (project) {
                 var deferred = $q.defer();
-                $http.post("/mlogger/projects", project)
+                $http.post("/mlogger/events/save", project)
                     .success(function (data) {
                                  deferred.resolve(data);
                              })
                     .error(function (data, status) {
-                               deferred.reject(new Error('Error saving project data: ' + status));
+                               deferred.reject(new Error('Error saving event data: ' + status));
                            });
-                return deferred.promise;
-            },
-            query:function () {
-                var deferred = $q.defer();
-                $http.get("/mlogger/projects")
-                        .success(function (data) {
-                                     deferred.resolve(data);
-                                 })
-                        .error(function (data, status) {
-                                   deferred.reject(new Error('Error loading projects data: ' + status));
-                               });
                 return deferred.promise;
             }
         }
-    })
+    });
 

@@ -1,10 +1,40 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+<nav id="navSideBar">
+    <h3>Projects</h3>
+    <ul class="nav">
+        <accordion close-others="oneAtATime">
+            <accordion-group heading="{{project.name}}" ng-repeat="project in projects">
+                <li ng-repeat="source in project.sources" ng-click="viewSource(project, source)" style=" cursor:pointer;">{{source.name}}</li>
+            </accordion-group>
+        </accordion>
+    </ul>
+</nav>
+<section id="logPageSection" style=" width: 79%; float: left;">
+    <header class="sectionHeader"><h3>Log Viewer for source {{gridData.source.name}} </h3></header>
 
-</body>
-</html>
+        <article class="sectionArticleFilter" style="text-align: justify;">
+            <div class="inner">
+                <div class="titlebar">Filter</div>
+                <input type="text" ng-model="searchSource" class="search-query" placeholder="Search Sources">
+            </div>
+   	    </article>
+
+        <article class="sectionArticleContent" id="log">
+            <ul class="buffer EventsViewerSoftWrap" style="padding-left: 0;">
+                <li class="default">
+                    <table class="simpleResultsTable inner">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="head in gridData.headers">{{head}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in gridData.rows">
+                                <td ng-repeat="cell in row.cells">{{cell.value}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+            <pagination rotate="false" num-pages="gridData.pagination.noOfPages" current-page="currentPage" max-size="maxSize" boundary-links="true" style="cursor:pointer"></pagination>
+        </article>
+</section>

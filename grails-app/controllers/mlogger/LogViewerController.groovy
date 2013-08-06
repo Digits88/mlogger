@@ -30,13 +30,13 @@ class LogViewerController {
         render(view: "logViewer")
     }
 
-    def list(Integer maxPag, Integer offsetPag) {
+    def list(String sourceId, Integer maxPag, Integer offsetPag) {
         if (!maxPag || maxPag == null) maxPag = 10
         if (!offsetPag || offsetPag == null) offsetPag = 0
         if (!params.sort) params.sort = "lineNumber"
         if (!params.order) params.order = "asc"
 
-        ObjectId objectId = new ObjectId("515564457213e8e8a06d388a")
+        ObjectId objectId = new ObjectId(sourceId)
         def totalEvents = Event.collection.find(source_id: objectId).count();
 
         def eventList = []

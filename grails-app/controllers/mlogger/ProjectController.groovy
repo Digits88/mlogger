@@ -38,8 +38,14 @@ class ProjectController {
 //        render contentType: 'application/json', text: items
 
         def projectJsonList = []
-        Project.collection.find().each { log ->
-            projectJsonList << log
+        Project.collection.find().each { project ->
+            log.info "project " + project._id
+            def sourceJsonList = []
+            Source.collection.find(project: project._id).each { source ->
+                sourceJsonList << source
+            }
+            project.sources = sourceJsonList
+            projectJsonList << project
         }
         render contentType: "application/json", text: projectJsonList
     }

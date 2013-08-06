@@ -77,11 +77,15 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
             });
         };
 
+        $scope.viewSource = function (project, source) {
+            $location.path('/viewer');
+        };
+
         $scope.viewSources = function (project) {
             SourceFactory.queryAll(project).then(function (sources) {
                 $scope.projectNavClicked = true;
                 populateGridData(sources, project);
-//                $location.path('/projects/' + project._id.$oid + '/sources');
+    //                $location.path('/projects/' + project._id.$oid + '/sources');
             });
         };
 
@@ -129,7 +133,7 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                     label: "SOURCE"
                 },
                 {
-                    id: "dataType",
+                    id: "type",
                     type: "value",
                     label: "DATA TYPE"
                 },
@@ -149,14 +153,14 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                     label: "LAST EVENT"
                 },
                 {
-                    id: "pattern",
+                    id: "mask",
                     type: "value",
                     label: "PATTERN"
                 },
                 {
                     id: "action",
                     type: "action",
-                    label: "ACTION"
+                    label: "ACTIONS"
                 }
             ];
 
@@ -165,7 +169,10 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                 var head;
                 for (var i = 0; i < header.length; i++) {
                     head = header[i];
-                    addCell(head, source[head.id], cells);
+                    if(head.id === 'mask' && !_.isUndefined(source[head.id]))
+                        addCell(head, source[head.id].regex, cells);
+                    else
+                        addCell(head, source[head.id], cells);
                 }
                 addRow(cells, index, rows, source)
             });
@@ -344,14 +351,15 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                 source:'=',
                 project:'=',
                 editSource:'=',
-                deleteSource:'='
+                deleteSource:'=',
+                viewSource:'='
             },
             link:function (scope, element, attrs) {
                 var row = scope.row;
                 var cell = scope.cell;
 
                 if (cell.id.type === 'action') {
-                    element.html($compile('<span mlogger-action-cell source="source" project="project" delete-source="deleteSource" edit-source="editSource"></span>')(scope));
+                    element.html($compile('<span mlogger-action-cell source="source" project="project" delete-source="deleteSource" edit-source="editSource" view-source="viewSource"></span>')(scope));
                 }
                 else {
                     element.html($compile('<span>{{ cell.value }}</span>')(scope));
@@ -369,9 +377,11 @@ angular.module('projects', ['ui.bootstrap', 'ngResource', 'source.configuration'
                 source:'=',
                 project:'=',
                 editSource:'=',
-                deleteSource:'='
+                deleteSource:'=',
+                viewSource:'='
             },
             template:'<div>' +
+                     '  <img src="static/images/skin/view.png" alt="view" ng-click="viewSource(project, source)" style=" cursor:pointer;"/>' +
                      '  <img src="static/images/skin/pencil.png" alt="edit" ng-click="editSource(project, source)" style="cursor:pointer; "/>' +
                      '  <img src="static/images/skin/delete.png" alt="delete" ng-click="deleteSource(project, source)" style=" cursor:pointer;"/>' +
                      '</div>'

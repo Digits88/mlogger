@@ -1,45 +1,21 @@
-2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] TEST phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:
-  receive [LoggingInInterceptor, AttachmentInInterceptor]
-  post-stream [StaxInInterceptor]
-2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] DEBUG phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain test org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:
-2012-09-27 01:00:00,028 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Running shopping basket clean up
-2012-09-27 01:00:00,348 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - getOrderStatusForLineItems called.
-2012-09-27 01:00:00,383 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 136467 to request.
-2012-09-27 01:00:00,408 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,411 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135767 to request.
-2012-09-27 01:00:00,419 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135766 to request.
-2012-09-27 01:00:00,424 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135768 to request.
-2012-09-27 01:00:00,427 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 136466 to request.
-2012-09-27 01:00:00,430 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 142058 to request.
-2012-09-27 01:00:00,433 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135762 to request.
-2012-09-27 01:00:00,434 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135763 to request.
-2012-09-27 01:00:00,440 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135765 to request.
-2012-09-27 01:00:00,442 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 135764 to request.
-2012-09-27 01:00:00,454 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 141452 to request.
-2012-09-27 01:00:00,473 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 140737 to request.
-2012-09-27 01:00:00,475 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 140737 to request.
-2012-09-27 01:00:00,480 [quartzScheduler_Worker-3] 136218 beagle.OrderService (DC Job KCI Status Update) - adding cofId 141598 to request.
-2012-09-27 01:00:00,483 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 142060 to request.
-2012-09-27 01:00:00,487 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 141129 to request.
-2012-09-27 01:00:00,490 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 138305 to request.
-2012-09-27 01:00:00,493 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 138305 to request.
-2012-09-27 01:00:00,383 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136467 to request.
-2012-09-27 01:00:00,408 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,411 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,419 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,424 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,427 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,430 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,433 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,434 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,440 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,442 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,454 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,473 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,475 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,480 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,483 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,487 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,490 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-2012-09-27 01:00:00,493 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
-
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 
+144.18.39.44 - - [01/Sep/2002:00:03:20 -0700] "GET /resources.html HTTP/1.1" 200 3458 "http://www.aivosto.com/" "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" 

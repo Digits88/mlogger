@@ -65,8 +65,8 @@
             <nav role="navigation" id="mainNavBar">
                 <ul id="mainNav">
                     <li><a href="/mlogger/">Home</a></li>
-                    <li><g:link controller="logViewer" action="index">Log Viewer</g:link></li>
-                    <li><g:link controller="project" action="index" class="selected">Projects</g:link></li>
+                    <li><a href="#/viewer">Log Viewer</a></li>
+                    <li><a href="#/">Projects</a></li>
                         <ul>
                             <li><a href="#">Item 01</a></li>
                             <li><a href="#" class="selected">Item 02</a></li>

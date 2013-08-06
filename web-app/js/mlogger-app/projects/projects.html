@@ -15,7 +15,7 @@
 
     <!--<div mlogger-project-sources projects="projects"></div>-->
     <div id="source_fragment" style=" width: 79%; float: left;" ng-show="projectNavClicked">
-        <section id="logPageSection" style=" width: 79%; float: left;">
+        <section id="logPageSection" style=" width: 100%; float: left;">
             <header class="sectionHeader"><h2>Sources {{ gridData.project.name }} <img src="static/images/skin/add.png" alt="add" ng-click="viewSourceConfiguration(gridData.project)" style="cursor:pointer; float:right; margin-top: 11px;"/></h2></header>
 
             <input type="text" ng-model="searchSource" class="search-query" placeholder="Search Sources">
@@ -30,7 +30,7 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="row in gridData.rows | filter:searchSource | orderBy:'name'">
-                                <td ng-repeat="cell in row.cells" mlogger-grid-cell="cell" delete-source="deleteSource" edit-source="editSource" source="row.source" project="gridData.project">{{cell.value}}</td>
+                                <td ng-repeat="cell in row.cells" mlogger-grid-cell="cell" delete-source="deleteSource" edit-source="editSource" view-source="viewSource" source="row.source" project="gridData.project">{{cell.value}}</td>
                             </tr>
                         </tbody>
                     </table>

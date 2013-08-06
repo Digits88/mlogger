@@ -6,10 +6,10 @@ class Source {
 
     ObjectId id
     String name
-//    String host
-//    String source
-//    String dataType
-//    Integer countEvent
+    String host
+    String source
+    String type
+    Integer countEvent
 //    Date earliestEvent
 //    Date lastEvent
 

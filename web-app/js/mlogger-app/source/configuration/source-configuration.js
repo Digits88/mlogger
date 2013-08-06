@@ -64,11 +64,11 @@ angular.module('source.configuration', ['sourceService', 'ui.bootstrap', 'ngUplo
                         };
             source.projectId = $routeParams.projectId;
             source.mask = ms;
+            $scope.source.fileSize = content.fileSize;
+            $scope.source.fileName = content.fileName;
+            $scope.source.logs = content.logs;
+            $scope.source.projectId = $routeParams.projectId;
             SourceFactory.save($scope.source).then(function (data) {
-                $scope.source.fileSize = content.fileSize;
-                $scope.source.fileName = content.fileName;
-                $scope.source.logs = content.logs;
-                $scope.source.projectId = $routeParams.projectId;
                 SourceFactory.setSource($scope.source);
                 $location.path('/projects/'+ $routeParams.projectId +'/source/' + data.sourceId + '/preview');
             });

@@ -133,7 +133,7 @@ class SourceController {
             return
         }
 
-        def sourceInstance = new Source(name: params.name, host: params.host.host)
+        def sourceInstance = new Source(name: params.name, host: params.host.host, source: params.fileName, type: params.type.type, countEvent: 0)
 
         log.info"sourceInstance " +sourceInstance
 

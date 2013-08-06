@@ -14,6 +14,6 @@ class Project {
 //    static mapWith = "mongo"
 
     static constraints = {
-        sources reference:false
+        sources reference: false
     }
 }

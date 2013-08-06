@@ -13,15 +13,15 @@ angular.module('log-viewer', ['ui.bootstrap'])
 ////                }]
 ////            }
 //        })
-//            .when('/mlogger/projects/:projectId/source/configuration', {
-//                templateUrl:'static/js/mlogger-app/projects/source/configuration/source-configuration.tpl.html',
-//                controller:'SourceConfigurationCtrl'
-//            })
+            .when('/viewer', {
+                templateUrl: 'static/js/mlogger-app/log-viewer/log-viewer.html',
+                controller:'LogViewerCtrl'
+            })
+
 //        .when('/configuration', {
 //            templateUrl: 'projects/source/configuration/source-configuration.tpl.html',
 //            controller: 'SourceConfigurationCtrl'
 //        })
-//        .otherwise({redirectTo: '/mlogger/source/list'});
     }])
 
     .controller('LogViewerCtrl', ['$scope', '$location', 'LogViewerFactory', 'Logger', function ($scope, $location, LogViewerFactory, Logger) {
@@ -31,7 +31,7 @@ angular.module('log-viewer', ['ui.bootstrap'])
         $scope.oneAtATime = true;
 
         $scope.viewSource = function (project, source) {
-            $location.path('/mlogger/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
+            //$location.path('/viewer/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
             LogViewerFactory.queryEvent(project, source, 0, 10).then(function (data) {
                 populateGridData(data, project, source);
             });
@@ -39,7 +39,9 @@ angular.module('log-viewer', ['ui.bootstrap'])
 
         function populateGridData(data, project, source) {
             logger.time('start populate grid data');
-            var mask = [{head: ["lineNumber", "DATE", "TIME", "HOST", "LEVEL", "CLASS", "THREAD", "MESSAGE"]}];
+//            var mask = [{head: ["lineNumber", "DATE", "TIME", "HOST", "LEVEL", "CLASS", "THREAD", "MESSAGE"]}];
+            var mask = [{head: source.mask.head}];
+
             var rows = [];
 
             _.each(data.logs, function (log, index) {
@@ -124,7 +126,7 @@ angular.module('log-viewer', ['ui.bootstrap'])
 
         $scope.$watch("currentPage", function(newValue) {
             if(!_.isUndefined($scope.gridData)) {
-                $location.path('/mlogger/events').search({projectId: $scope.gridData.project._id.$oid, sourceId: $scope.gridData.source._id.$oid, max: $scope.gridData.pagination.max, offset: newValue * $scope.gridData.pagination.max});
+                //$location.path('/mlogger/events').search({projectId: $scope.gridData.project._id.$oid, sourceId: $scope.gridData.source._id.$oid, max: $scope.gridData.pagination.max, offset: newValue * $scope.gridData.pagination.max});
                 LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, newValue * $scope.gridData.pagination.max, $scope.gridData.pagination.max).then(function (data) {
                     populateGridData(data, $scope.gridData.project, $scope.gridData.source);
                 });

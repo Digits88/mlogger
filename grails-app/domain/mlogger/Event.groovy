@@ -5,10 +5,11 @@ import org.bson.types.ObjectId
 class Event {
 
     ObjectId id
-    int lineNumber
-
+    Long lineNumber
+    static hasMany = [events: Event]
     static belongsTo = [source: Source]
 
     static constraints = {
+        events reference: false
     }
 }

@@ -50,9 +50,16 @@ class UrlMappings {
             action = [DELETE:"delete"]
         }
 
+        // ************ Source API
+        //                          ************
+        "/events/save"(controller: "event", parseRequest: true) {
+            action = [POST: "saveTest"]
+        }
 
 //        "/events/$projectId?/$sourceId?/$maxPag?/$offsetPag?"(controller: "logViewer", action:  "list", parseRequest: true)
-        "/events"(controller: "logViewer", action:  "list", parseRequest: true)
+        "/events"(controller: "logViewer", parseRequest: true) {
+            action = [GET: "list"]
+        }
 
 	}
 }
