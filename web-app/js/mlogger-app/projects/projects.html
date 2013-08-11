@@ -4,61 +4,39 @@
 <head>
     <title>Projects</title>
 </head>
-<body >
-    <div id="project_fragment">
-        <nav id="navSideBar">
-            <h3>Projects <img src="static/images/skin/add.png" alt="add" ng-click="addProject()" style="cursor:pointer; float:right; margin-top: 11px;"/></h3>
-            <!-- TODO: change this from directive to routing e.g. ui-route module -->
-            <div mlogger-project-sidebar projects="projects" project-action="projectAction" cancel-project="cancelProject" view-sources="viewSources" create-project="createProject" delete-project="deleteProject" edit-project="editProject" update-project="updateProject" project="project"></div>
-        </nav>
-    </div>
-
-    <!--<div mlogger-project-sources projects="projects"></div>-->
-    <div id="source_fragment" style=" width: 79%; float: left;" ng-show="projectNavClicked">
-        <section id="logPageSection" style=" width: 100%; float: left;">
-            <header class="sectionHeader"><h2>Sources {{ gridData.project.name }} <img src="static/images/skin/add.png" alt="add" ng-click="viewSourceConfiguration(gridData.project)" style="cursor:pointer; float:right; margin-top: 11px;"/></h2></header>
-
-            <input type="text" ng-model="searchSource" class="search-query" placeholder="Search Sources">
-
-            <article class="sectionArticleContent" id="sourcesList">
-                <li class="default">
-                    <table id="thetable" class="simpleResultsTable inner" ng-show="gridData.rows">
-                        <thead>
-                            <tr>
-                                <th ng-repeat="head in gridData.headers">{{head.label}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="row in gridData.rows | filter:searchSource | orderBy:'name'">
-                                <td ng-repeat="cell in row.cells" mlogger-grid-cell="cell" delete-source="deleteSource" edit-source="editSource" view-source="viewSource" source="row.source" project="gridData.project">{{cell.value}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="alert alert-info" ng-hide="gridData.rows">No source created yet</div>
-                </li>
-            </article>
-        </section>
-    </div>
-
-
-    <div modal="shouldBeOpen" close="close()" options="opts" style="color: #000000">
-        <div class="modal-header">
-            <h3>Create new project</h3>
+<body>
+    <nav id="navSideBar" class="col-lg-2" style="padding-right: 0">
+        <div class="header" style="padding: 4px 15px;">
+            <h3>Projects <img src="static/images/skin/add.png" alt="add" ng-click="addProject()" style="cursor:pointer; float:right; margin-top: 5px;"/></h3>
         </div>
-        <form method="POST" action="" novalidate class="form-horizontal">
-            <div class="modal-body">
-                <div class="control-group">
-                    <label class="control-label" for="inputName">Name</label>
-                    <div class="controls">
-                        <input type="text" id="inputName" placeholder="Name" ng-model="newProject.name">
-                    </div>
-                </div>
+        <!-- TODO: change this from directive to routing e.g. ui-route module -->
+        <div style="padding-right: 15px; padding-left: 15px;" mlogger-project-sidebar projects="projects" project-action="projectAction" cancel-project="cancelProject" view-sources="viewSources" create-project="createProject" delete-project="deleteProject" edit-project="editProject" update-project="updateProject" project="project"></div>
+    </nav>
+
+    <section class="col-lg-10" ng-show="projectNavClicked">
+        <div class="header" style="padding: 4px 15px;">
+            <h3>Sources {{ gridData.project.name }} <img src="static/images/skin/add.png" alt="add" ng-click="viewSourceConfiguration(gridData.project)" style="cursor:pointer; float:right; margin-top: 5px;"/></h3>
+        </div>
+
+        <article style="padding-right: 15px; padding-left: 15px;">
+            <input type="text" ng-model="searchSource" class="form-control input-sm" placeholder="Search Sources" style="margin-bottom: 18px">
+
+            <div class="tableWrapper" ng-show="gridData.rows">
+                <table class="table table-condensed no-wrap">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="head in gridData.headers">{{head.label}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in gridData.rows | filter:searchSource | orderBy:'name'">
+                            <td ng-repeat="cell in row.cells" mlogger-grid-cell="cell" delete-source="deleteSource" edit-source="editSource" view-source="viewSource" source="row.source" project="gridData.project">{{cell.value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-warning submit" ng-click="createProject(newProject)">Create</button>
-                <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-            </div>
-        </form>
-    </div>
+            <div class="alert alert-info" ng-hide="gridData.rows">No source created yet.</div>
+        </article>
+    </section>
 </body>
 </html>

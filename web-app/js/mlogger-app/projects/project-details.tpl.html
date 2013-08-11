@@ -1,13 +1,16 @@
-<form method="POST" action="" novalidate>
-    <div class="control-group" ng-show="projectAction != 'delete'">
-        <input type="hidden" name="name" ng-model="project.id" ng-init="project.id=project._id.$oid">
-
-        <label>Name</label>
-        <input type="text" name="name" ng-model="project.name" required>
+<form class="form-horizontal" method="POST" action="" novalidate>
+    <input type="hidden" name="name" ng-model="project.id" ng-init="project.id=project._id.$oid">
+    <div class="form-group" ng-show="projectAction != 'delete'">
+        <label for="inputProjectName" class="col-lg-2 control-label">Name</label>
+        <div class="col-lg-10">
+            <input ng-model="project.name" type="text" id="inputProjectName" placeholder="Project Name" class="form-control input-sm" required>
+        </div>
     </div>
-    <p ng-show="projectAction == 'delete'">Are you sure you want to delete project <b>'{{ project.name }}'</b> with all sources?</p>
-    <button class="btn-small btn" ng-click="cancelProject()">Cancel</button>
-    <button class="btn-small btn-success" ng-click="createProject(project)" ng-show="projectAction != 'delete' && projectAction != 'edit'">Save</button>
-    <button class="btn-small btn-success" ng-click="updateProject(project)" ng-show="projectAction == 'edit'">Update</button>
-    <button class="btn-small btn-danger" ng-click="deleteProject(project)" ng-show="projectAction == 'delete'">Delete</button>
+    <p ng-show="projectAction == 'delete'" class="tableWrapper" style="padding-bottom: 8px">Are you sure you want to delete project <b>'{{ project.name }}'</b> with all sources?</p>
+    <div class="col-lg-offset-5 col-lg-12">
+        <button type="button" class="btn btn-success btn-sm" ng-click="cancelProject()">Cancel</button>
+        <button type="button" class="btn btn-success btn-sm" ng-click="createProject(project)" ng-show="projectAction != 'delete' && projectAction != 'edit'">Save</button>
+        <button type="button" class="btn btn-success btn-sm" ng-click="updateProject(project)" ng-show="projectAction == 'edit'">Update</button>
+        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteProject(project)" ng-show="projectAction == 'delete'">Delete</button>
+    </div>
 </form>

@@ -1,28 +1,71 @@
-<div style="margin: 10px auto;width: 976px;">
-    <section id="logPageSection" style="">
-        <header class="sectionHeader"><h2>Data Configuration</h2></header>
-        <article class="sectionArticleContent" id="log">
-            <form ng-upload action="/mlogger/source/preview">
-                <label class="inline"> Source Name: </label>
-                <input ng-model="source.name" type="text" placeholder="Source Name" required>
-
-                <label class="inline"> Data Source: </label>
-                <select ng-model="source.host" ng-options="host as host.host for host in hosts" required>
-                    <option value="">-- chose source --</option>
-                </select>
-
-                <label class="inline"> Data Type: </label>
-                <select ng-model="source.type" ng-options="type as type.type for type in types" required>
-                    <option value="">-- chose type --</option>
-                </select>
-
-                <label class="inline"> Path: </label>
-                <input type="file" name="file" required/>
-
-                <br /> <br />
-                <a class="btn btn-small" href="#/">Cancel</a>
-                <button class="btn-success btn-small"  upload-submit="uploadComplete(content, completed)">Preview</button>
-            </form>
-        </article>
-    </section>
+<div class="col-lg-12">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8 container header">
+        <h3>Data Configuration</h3>
+    </div>
+    <div class="col-lg-2"></div>
 </div>
+
+<div class="col-lg-2"></div>
+<section class="col-lg-8 container">
+    <article class="container">
+        <!--<form ng-upload action="/mlogger/source/preview">-->
+            <!--<label class="inline"> Source Name: </label>-->
+            <!--<input ng-model="source.name" type="text" placeholder="Source Name" required>-->
+
+            <!--<label class="inline"> Data Source: </label>-->
+            <!--<select ng-model="source.host" ng-options="host as host.host for host in hosts" required>-->
+                <!--<option value="">-- chose source --</option>-->
+            <!--</select>-->
+
+            <!--<label class="inline"> Data Type: </label>-->
+            <!--<select ng-model="source.type" ng-options="type as type.type for type in types" required>-->
+                <!--<option value="">-- chose type --</option>-->
+            <!--</select>-->
+
+            <!--<label class="inline"> Path: </label>-->
+            <!--<input type="file" name="file" required/>-->
+
+            <!--<br /> <br />-->
+            <!--<a class="btn btn-small" href="#/">Cancel</a>-->
+            <!--<button class="btn-success btn-small"  upload-submit="uploadComplete(content, completed)">Preview</button>-->
+        <!--</form>-->
+        <form class="form-horizontal" ng-upload action="/mlogger/source/preview">
+            <div class="form-group">
+                <label for="inputSourceName" class="col-lg-5 control-label">Source Name</label>
+                <div class="col-lg-3">
+                    <input ng-model="source.name" type="text" id="inputSourceName" placeholder="Source Name" class="form-control input-sm" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputDataSource" class="col-lg-5 control-label">Data Source</label>
+                <div class="col-lg-3">
+                    <select ng-model="source.host" ng-options="host as host.host for host in hosts" id="inputDataSource" class="form-control input-sm" required>
+                        <option value="">-- chose source --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputDataType" class="col-lg-5 control-label">Data Type</label>
+                <div class="col-lg-3">
+                    <select ng-model="source.type" ng-options="type as type.type for type in types" id="inputDataType" class="form-control input-sm" required>
+                        <option value="">-- chose type --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputFile" class="col-lg-5 control-label ">File Input</label>
+                <div class="col-lg-3">
+                    <input type="file" id="inputFile" name="file" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-5 col-lg-10">
+                    <button type="button" class="btn btn-success btn-sm"><a href="#/">Cancel</a></button>
+                    <button type="button" class="btn btn-success btn-sm" upload-submit="uploadComplete(content, completed)">Preview</button>
+                </div>
+            </div>
+        </form>
+    </article>
+</section>
+<div class="col-lg-2"></div>

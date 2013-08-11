@@ -54,7 +54,7 @@ angular.module('log-viewer', ['ui.bootstrap'])
                 addRow(cells, index, rows)
             });
 
-            addGridData(mask[0].head, rows, project, source, data.pagination)
+            addGridData(mask[0].head, rows, project, source, data.pagination);
 
             logger.time('finish populate grid data');
         }
@@ -177,3 +177,4 @@ angular.module('log-viewer', ['ui.bootstrap'])
 
         }
     })
+

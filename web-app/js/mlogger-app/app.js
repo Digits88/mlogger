@@ -9,7 +9,7 @@ var LOG_LEVEL_ENUM = {
     ALL:{value:5, name:"Off", code:"O"}
 };
 
-angular.module('mloggerApp', ['log-viewer', 'projects', 'source.configuration'])
+angular.module('mloggerApp', ['log-viewer', 'projects', 'source.configuration', 'administration'])
 
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 //        $locationProvider.html5Mode(true);
@@ -19,14 +19,17 @@ angular.module('mloggerApp', ['log-viewer', 'projects', 'source.configuration'])
 //                controller:''
 //            })
             .when('/', {
-                templateUrl: 'static/js/mlogger-app/projects/projects.html',
-                controller:'ProjectCtrl'
+                templateUrl: 'static/js/mlogger-app/home/home.tpl.html'
             })
 //            .otherwise({redirectTo: '/projects'});
     }])
 
 //    .constant('APP_ROOT', 'static/js/mlogger-app/');
-
+    .controller('NavCtrl', ['$scope','$route', '$routeParams', '$location', function MenuCntl($scope, $route, $routeParams, $location) {
+        $scope.$route = $route;
+        $scope.$location = $location;
+        $scope.$routeParams = $routeParams;
+    }])
 .factory('Logger', ['$log', function ($log) {
 
     var timeStart = new Date().getTime();

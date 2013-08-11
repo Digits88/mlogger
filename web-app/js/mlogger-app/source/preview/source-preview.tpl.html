@@ -1,67 +1,63 @@
-<div style="margin: 0 20px;">
+<div class="col-lg-12 header col-margin">
+    <h3>Data Preview</h3>
+</div>
+<div class="col-lg-12" style="min-height: 200px; margin-bottom: 18px">
     <tabset>
         <tab heading="Log Pattern">
-              <label ng-repeat="mask in masks">
-                <input type="radio" ng-model="$parent.choice" value="{{ mask.id }}" ng-change='watchRadioButtonChange($parent.choice)'>{{ mask.label }}<br/>
-              </label>
-
-            <tt>color = {{choice}}</tt><br/>
-
+            <div class="tableWrapper" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                <div class="radio" ng-repeat="mask in masks">
+                    <label>
+                        <input type="radio" ng-model="$parent.choice" value="{{ mask.id }}" ng-change='watchRadioButtonChange($parent.choice)'>{{ mask.label }}<br/>
+                    </label>
+                </div>
+            <!--<tt>color = {{choice}}</tt><br/>-->
+            </div>
         </tab>
         <tab heading="Create Pattern">
-            Static content
-            <g:remoteLink action="ajx_showLogPattern" id="${sourceInstance.id}" update="patternField" class="button-mlogger">Refresh</g:remoteLink>
-
-            <div id="patternField">
-                <g:render template="logPattern" model="[sourceInstance: sourceInstance, previewLogsList: previewLogsList]"/>
+            <div class="tableWrapper" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                <div class="alert alert-info">Coming soon!</div>
             </div>
         </tab>
     </tabset>
 </div>
-<div style="margin: 0 20px">
-    <div style="width: 80%; float: left" id="previewLogFragment">
-        <li class="default">
-            <table id="thetable" class="simpleResultsTable inner">
-                <thead>
-                    <tr>
-                        <th ng-repeat="head in gridData.headers">{{head}}</th>
-                    </tr>
-                </thead>
-                <tbody>
+<div class="col-lg-10" style="height: 300px; padding-right: 0">
+    <div class="tableWrapper" ng-show="gridData.rows">
+        <table class="table table-condensed no-wrap">
+            <thead>
+                <tr>
+                    <th ng-repeat="head in gridData.headers">{{head}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in gridData.rows">
+                    <td ng-repeat="cell in row.cells">{{cell.value}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="alert" ng-hide="gridData.rows">You have selected regular expression that doesn't match any logs! Please try select another regular expression.</div>
+</div>
 
-                    <tr ng-repeat="row in gridData.rows">
-                        <td ng-repeat="cell in row.cells">{{cell.value}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </li>
-        <g:render template="previewLog" model="[previewLogsList: previewLogsList, previewLogsMap: previewLogsMap, logHeader: logHeader, isMap: isMap]"/>
+<div class="col-lg-2">
+    <div class="tableWrapper">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th colspan = "2">File PROPERTIES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>File Name: </td><td>{{ source.fileName }}</td>
+                </tr>
+                <tr>
+                    <td>Bytes: </td><td>{{ source.fileSize }}</td>
+                </tr>
+            </tbody>
+         </table>
     </div>
-
-    <div style="float: left;width: 20%;">
-        <article class="sectionArticleContent">
-            <li class="default">
-                <table class="simpleResultsTable inner">
-                    <thead>
-                        <tr>
-                            <th colspan = "2">File PROPERTIES</th>
-                        </tr>
-                    </thead>
-                     <tbody>
-                        <tr>
-                            <td>File Name: </td><td>{{ source.fileName }}</td>
-                        </tr>
-                        <tr>
-                            <td>Bytes: </td><td>{{ source.fileSize }}</td>
-                        </tr>
-                    </tbody>
-                 </table>
-            </li>
-        </article>
-    </div>
-    <div style="width: 100%; clear: both; padding-top: 55px;">
-        <button class="btn btn-small"  ng-click="viewSourceConfiguration()" style="float: left;">Configuration</button>
-        <!--<g:link id="${sourceInstance.id}" controller="source" action="saveTest" class="button-mlogger" style="float: right;">Add Data</g:link>&nbsp;-->
-        <button class="btn btn-success"  ng-click="addEvent()" style="float: right;">Add Data</button>
-    </div>
+</div>
+<div class="col-lg-12">
+    <button class="btn btn-success btn-sm pull-left" ng-click="viewSourceConfiguration()">Configuration</button>
+    <button class="btn btn-success btn-sm pull-right" ng-click="addEvent()">Add Data</button>
 </div>

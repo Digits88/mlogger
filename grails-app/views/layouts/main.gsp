@@ -49,7 +49,7 @@
   		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
   		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
   		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        %{--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">--}%
   		<g:layoutHead/>
         <r:require modules="application"/>
   		<r:layoutResources />
@@ -60,36 +60,47 @@
             <script src="http://localhost:35729/livereload.js"></script>
         </g:if>
         <!-- the header and navigation -->
-        <header role="banner" id="header">
-            <h1 id="logo">mLogger</h1>
-            <nav role="navigation" id="mainNavBar">
-                <ul id="mainNav">
-                    <li><a href="/mlogger/">Home</a></li>
-                    <li><a href="#/viewer">Log Viewer</a></li>
-                    <li><a href="#/">Projects</a></li>
-                        <ul>
-                            <li><a href="#">Item 01</a></li>
-                            <li><a href="#" class="selected">Item 02</a></li>
-                            <li><a href="#">Item 03</a></li>
-                        </ul>
-                        <div class="clear"></div>
-                    </li>
-                    <li><a href="#">Administration</a>
-                    <ul>
-                        <li><g:link controller="project" action="index">Projects & SourceSSs</g:link></li>
-                        <li><a href="#">Sources</a></li>
-                    </ul>
-                        <div class="clear"></div>
-                    </li>
-                    <li><a href="#">Parent 04</a></li>
-                </ul>
-
-                <div class="clear"></div>
-            </nav>
+        <header class="navbar-wrapper row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8 container">
+                <nav role="navigation" class="navbar navbar-inverse navbar-static-top" ng-controller="NavCtrl">
+                    <div class="navbar-inner">
+                        <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">mLogger</a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav navbar-nav">
+                                <li data-ng-class="{active: ($location.path() == '/') }"><a href="/mlogger/">Home</a></li>
+                                <li data-ng-class="{active: ($location.path() == '/viewer') }"><a href="#/viewer">Log Viewer</a></li>
+                                <li data-ng-class="{active: ($location.path() == '/projects') }"><a href="#/projects">Projects</a></li>
+                                <li data-ng-class="{active: ($location.path() == '/administration') }"><a href="#/administration">Administration</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-2"></div>
         </header>
 
-  		<g:layoutBody/>
-        <footer id="pageFooter">&copy; Martin Micunda</footer>
+        <div class="row">
+  		    <g:layoutBody/>
+        </div>
+        %{--<footer class="col-lg-12">--}%
+            %{--<div class="col-lg-2"></div>--}%
+            %{--<div class="col-lg-8 container">--}%
+                %{--<p class="pull-right">--}%
+                    %{--<a href="http://martinm.net/" target="_blank">&copy; 2013 Martin Micunda</a> |--}%
+                    %{--<a href="#/viewer">Log Viewer</a> |--}%
+                    %{--<a href="#/">Projects</a> |--}%
+                    %{--<a href="#">Administration</a>--}%
+                %{--</p>--}%
+            %{--</div>--}%
+            %{--<div class="col-lg-2"></div>--}%
+        %{--</footer>--}%
   		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
   		<r:layoutResources />
     </body>

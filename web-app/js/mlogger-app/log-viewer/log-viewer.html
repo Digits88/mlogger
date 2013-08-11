@@ -1,40 +1,56 @@
-<nav id="navSideBar">
+<nav class="col-lg-2">
     <h3>Projects</h3>
-    <ul class="nav">
-        <accordion close-others="oneAtATime">
-            <accordion-group heading="{{project.name}}" ng-repeat="project in projects">
-                <li ng-repeat="source in project.sources" ng-click="viewSource(project, source)" style=" cursor:pointer;">{{source.name}}</li>
-            </accordion-group>
-        </accordion>
-    </ul>
+    <accordion close-others="oneAtATime">
+        <accordion-group heading="{{project.name}}" ng-repeat="project in projects">
+            <li ng-repeat="source in project.sources" ng-click="viewSource(project, source)" style=" cursor:pointer;">{{source.name}}</li>
+        </accordion-group>
+    </accordion>
+
+    <accordion close-others="oneAtATime">
+        <accordion-group heading="Test">
+            <li  style=" cursor:pointer;">dssdsd</li>
+        </accordion-group>
+    </accordion>
+    <!--<ul ng-repeat="project in projects">-->
+        <!--<li ng-repeat="source in project.sources" ng-click="viewSource(project, source)" style=" cursor:pointer;">{{source.name}}</li>-->
+    <!--</ul>-->
 </nav>
-<section id="logPageSection" style=" width: 79%; float: left;">
-    <header class="sectionHeader"><h3>Log Viewer for source {{gridData.source.name}} </h3></header>
+<section class="col-lg-10">
+    <div class="header" style="padding: 4px 15px;">
+        <h3>Log Viewer for source {{gridData.source.name}} </h3>
+    </div>
 
-        <article class="sectionArticleFilter" style="text-align: justify;">
-            <div class="inner">
-                <div class="titlebar">Filter</div>
-                <input type="text" ng-model="searchSource" class="search-query" placeholder="Search Sources">
+    <!--<article class="sectionArticleFilter" style="text-align: justify;">-->
+        <!--<div class="inner">-->
+            <!--<div class="titlebar">Filter</div>-->
+            <!--<input type="text" ng-model="searchSource" class="search-query" placeholder="Search Sources">-->
+        <!--</div>-->
+    <!--</article>-->
+
+    <article style="padding-right: 15px; padding-left: 15px;">
+        <div class="col-lg-12 col-reset" style="margin-bottom: 18px">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm">
+                <span class="input-group-btn">
+                    <button class="btn btn-success btn-sm" type="button">Search</button>
+                </span>
             </div>
-   	    </article>
+        </div>
 
-        <article class="sectionArticleContent" id="log">
-            <ul class="buffer EventsViewerSoftWrap" style="padding-left: 0;">
-                <li class="default">
-                    <table class="simpleResultsTable inner">
-                        <thead>
-                            <tr>
-                                <th ng-repeat="head in gridData.headers">{{head}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="row in gridData.rows">
-                                <td ng-repeat="cell in row.cells">{{cell.value}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </li>
-            </ul>
-            <pagination rotate="false" num-pages="gridData.pagination.noOfPages" current-page="currentPage" max-size="maxSize" boundary-links="true" style="cursor:pointer"></pagination>
-        </article>
+        <div class="col-lg-12 tableWrapper" ng-show="gridData.rows">
+            <table class="table table-condensed no-wrap">
+                <thead>
+                    <tr>
+                        <th ng-repeat="head in gridData.headers">{{head}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in gridData.rows">
+                        <td ng-repeat="cell in row.cells">{{cell.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <span ng-show="gridData.rows"><pagination rotate="false" num-pages="gridData.pagination.noOfPages" current-page="currentPage" max-size="maxSize" boundary-links="true" style="cursor:pointer"></pagination></span>
+    </article>
 </section>

@@ -13,6 +13,7 @@ module.exports = function(grunt) {
                 specs: ['../test/**/*.spec.js'],
                 scenarios: ['/test/**/*.scenario.js']
             },
+            tpl: ['../js/mlogger-app/**/**/*.html'],
             grails: {
                 gsp: ['../../grails-app/views/**/*.gsp']
             }
@@ -38,7 +39,7 @@ module.exports = function(grunt) {
                 // Start a live reload server on the default port 35729
                 livereload: true
             },
-            files:['<%= src.angular.js %>', '<%= src.grails.gsp %>', '<%= src.css %>'],
+            files:['<%= src.angular.js %>', '<%= src.grails.gsp %>', '<%= src.css %>', '<%= src.tpl %>'],
             tasks:['default','timestamp']
         }
     });

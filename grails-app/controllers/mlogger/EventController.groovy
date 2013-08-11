@@ -76,7 +76,7 @@ class EventController {
     }
 
     def search(Integer max, Integer offset, String searchText2) {
-        def mongo = new GMongo()
+//        def mongo = new GMongo()
 
             // Get a reference to the db
             def db = mongo.getDB("sample")
@@ -84,15 +84,15 @@ class EventController {
 
         def results
         def resultTotal
-        DBCollection coll = db.getCollection("event");
-
-//        final DBObject textSearchCommand = new BasicDBObject();
-//        textSearchCommand.put("text", coll);
-//        textSearchCommand.put("search", searchText2);
-        def textSearchCommand = [ "text": "event", "search": searchText2 ]
-
-        final CommandResult commandResult = db.command(textSearchCommand);
-        log.info"ss " +  commandResult.results
+//        DBCollection coll = db.getCollection("event");
+//
+////        final DBObject textSearchCommand = new BasicDBObject();
+////        textSearchCommand.put("text", coll);
+////        textSearchCommand.put("search", searchText2);
+//        def textSearchCommand = [ "text": "event", "search": searchText2 ]
+//
+//        final CommandResult commandResult = db.command(textSearchCommand);
+//        log.info"ss " +  commandResult.results
 //        log.info"ss " +  commandResult.results.count()
 
 
