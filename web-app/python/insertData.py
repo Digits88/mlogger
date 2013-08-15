@@ -6,7 +6,9 @@ import time
 import bson
 from pymongo import Connection
 from pymongo.errors import ConnectionFailure
+from pymongo import ASCENDING, DESCENDING
 from datetime import datetime
+from time import mktime
 
 #file = open("D:\\catalina2.txt","r")
 #rexp = re.compile('^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2},\d{3}) (\[.*\]) (.*) (\S*) (\(.*\)) - (.*)$')
@@ -74,12 +76,16 @@ try:
                 }
                 # add earliestEvent and lastEvent to source document
                 if earliestEvent is '':
-                    earliestEvent = match.group(1) + ' ' + match.group(2)
-                lastEvent = match.group(1) + ' ' + match.group(2)
+                    earliestEvent = match.group(1)
+                lastEvent = match.group(1)
 
                 # Event Fields (these fields are entered by user from UI)
                 for index,field in enumerate(mapList):
-                    event[field] = match.group(index + 1)
+                    if field == 'TIME':
+                        timestamp = time.strptime(match.group(index + 1), "%Y-%m-%d %H:%M:%S,%f")
+                        event[field] = datetime.fromtimestamp(mktime(timestamp))
+                    else:
+                        event[field] = match.group(index + 1)
 
             lineNumber +=  1
             if lineNumber % 1000 == 0:
@@ -103,5 +109,12 @@ finally:
     file.close( )
 
 toc = time.clock()
-print("Total of logs inserted: %s" % lineNumber)
-print("Total time: %s" % (toc - tic))
+print("Total of logs inserted: %s" % (lineNumber - 1))
+print("Total time of log insertion: %s" % (toc - tic))
+
+print("Start creating index 'source_id: 1, lineNumber: 1'")
+db["event"].create_index([("source_id", ASCENDING), ("lineNumber", ASCENDING)])
+db["event"].create_index([("source_id", ASCENDING), ("lineNumber", ASCENDING), ("MESSAGE", ASCENDING)])
+print("Total time of creating insertion: %s" % (toc - tic))
+
+print("Total time of all processes: %s" % (toc - tic))

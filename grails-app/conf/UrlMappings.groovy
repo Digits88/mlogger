@@ -56,8 +56,16 @@ class UrlMappings {
             action = [POST: "saveTest"]
         }
 
+        "/events/search"(controller: "event", parseRequest: true) {
+            action = [GET: "search"]
+        }
+
+        "/events/filter"(controller: "event", parseRequest: true) {
+            action = [POST: "filter"]
+        }
+
 //        "/events/$projectId?/$sourceId?/$maxPag?/$offsetPag?"(controller: "logViewer", action:  "list", parseRequest: true)
-        "/events"(controller: "logViewer", parseRequest: true) {
+        "/events/list"(controller: "event", parseRequest: true) {
             action = [GET: "list"]
         }
 

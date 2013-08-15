@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('log-viewer', ['ui.bootstrap'])
+angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -24,16 +24,68 @@ angular.module('log-viewer', ['ui.bootstrap'])
 //        })
     }])
 
-    .controller('LogViewerCtrl', ['$scope', '$location', 'LogViewerFactory', 'Logger', function ($scope, $location, LogViewerFactory, Logger) {
+    .controller('LogViewerCtrl', ['$scope', '$location', 'LogViewerFactory', 'Logger', '$timeout', function ($scope, $location, LogViewerFactory, Logger, $timeout) {
         var logger = Logger.getLogger('LogViewerCtrl');
 
         populateProjectsData();
         $scope.oneAtATime = true;
+        $scope.filter = "";
+        $scope.singleModel = 0;
+        $scope.searchText = "";
 
         $scope.viewSource = function (project, source) {
+            $scope.searchTextCopy = "";
+            $scope.searchText = "";
             //$location.path('/viewer/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
-            LogViewerFactory.queryEvent(project, source, 0, 10).then(function (data) {
+            LogViewerFactory.queryEvent(project, source, 0, 10, $scope.searchText).then(function (data) {
                 populateGridData(data, project, source);
+            });
+        };
+
+    $scope.filters = [
+        {id:'1', filterName:'Time'},
+        {id:'2', filterName:'Time | Level'},
+        {id:'3', filterName:'Time | User'}
+    ];
+
+    $scope.open = function() {
+      $timeout(function() {
+        $scope.opened = true;
+      });
+    };
+
+    $scope.$watch('filter', function (newVal, oldVal) {
+        if (newVal != oldVal) {
+            if(angular.isDefined(newVal.id)) {
+                $scope.filterId = newVal.id;
+            } else {
+                $scope.filterId = "";
+            }
+        }
+    });
+
+        $scope.filterEvent = function (project, source, filterQuery) {
+            $scope.filterQuery.sourceId = $scope.gridData.project._id.$oid;
+            $scope.filterQuery.projectId = $scope.gridData.project._id.$oid;
+            $scope.filterQuery.maxPag = 0;
+            $scope.filterQuery.offsetPag = 10;
+//            LogViewerFactory.queryFilterEvent($scope.gridData.project, $scope.gridData.source, 0, 10, filterQuery).then(function (data) {
+//                populateGridData(data, $scope.gridData.project, $scope.gridData.source);
+//            });
+            LogViewerFactory.queryFilterEvent($scope.filterQuery).then(function (data) {
+                  populateGridData(data, $scope.gridData.project, $scope.gridData.source);
+              });
+        };
+
+        $scope.searchEvent = function (project, source, searchText) {
+            //$location.path('/viewer/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
+//            LogViewerFactory.querySearchEvent($scope.gridData.project, $scope.gridData.source, 0, 10, searchText).then(function (data) {
+//                $scope.searchTextCopy = angular.copy(searchText);
+//                populateGridData(data, $scope.gridData.project, $scope.gridData.source);
+//            });
+            LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, 0, 10, $scope.searchText).then(function (data) {
+                $scope.searchTextCopy = angular.copy(data.searchText);
+                populateGridData(data, $scope.gridData.project, $scope.gridData.source);
             });
         };
 
@@ -54,7 +106,7 @@ angular.module('log-viewer', ['ui.bootstrap'])
                 addRow(cells, index, rows)
             });
 
-            addGridData(mask[0].head, rows, project, source, data.pagination);
+            addGridData(mask[0].head, rows, project, source, data.pagination, data.time);
 
             logger.time('finish populate grid data');
         }
@@ -79,13 +131,14 @@ angular.module('log-viewer', ['ui.bootstrap'])
             rows.push(rowValue);
         }
 
-        function addGridData(headers, rows, project, source, pagination) {
+        function addGridData(headers, rows, project, source, pagination, time) {
             $scope.gridData = {
                     project: project,
                     source: source,
                     pagination: pagination,
                     headers: headers,
-                    rows: rows
+                    rows: rows,
+                    time: time
                 };
         }
 
@@ -127,7 +180,8 @@ angular.module('log-viewer', ['ui.bootstrap'])
         $scope.$watch("currentPage", function(newValue) {
             if(!_.isUndefined($scope.gridData)) {
                 //$location.path('/mlogger/events').search({projectId: $scope.gridData.project._id.$oid, sourceId: $scope.gridData.source._id.$oid, max: $scope.gridData.pagination.max, offset: newValue * $scope.gridData.pagination.max});
-                LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, newValue * $scope.gridData.pagination.max, $scope.gridData.pagination.max).then(function (data) {
+                LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, newValue * $scope.gridData.pagination.max, $scope.gridData.pagination.max, $scope.searchText).then(function (data) {
+                    $scope.searchTextCopy = angular.copy(data.searchText);
                     populateGridData(data, $scope.gridData.project, $scope.gridData.source);
                 });
             }
@@ -163,9 +217,9 @@ angular.module('log-viewer', ['ui.bootstrap'])
                                });
                 return deferred.promise;
             },
-            queryEvent:function (project, source, offset, max) {
+            queryEvent:function (project, source, offset, max, searchText) {
                 var deferred = $q.defer();
-                $http.get('/mlogger/events?projectId=' + project._id.$oid + '&sourceId=' + source._id.$oid + '&maxPag=' + max + '&offsetPag=' + offset, {project: project._id.$oid, source: source._id.$oid, maxPag: max, offsetPag: offset})
+                $http.get('/mlogger/events/list?projectId=' + project._id.$oid + '&sourceId=' + source._id.$oid + '&maxPag=' + max + '&offsetPag=' + offset + '&searchText=' + searchText, {project: project._id.$oid, source: source._id.$oid, maxPag: max, offsetPag: offset})
                         .success(function (data) {
                                      deferred.resolve(data);
                                  })
@@ -173,8 +227,58 @@ angular.module('log-viewer', ['ui.bootstrap'])
                                    deferred.reject(new Error('Error loading projects data: ' + status));
                                });
                 return deferred.promise;
+            },
+            querySearchEvent:function (project, source, offset, max, searchText) {
+                var deferred = $q.defer();
+                $http.get('/mlogger/events/search?projectId=' + project._id.$oid + '&sourceId=' + source._id.$oid + '&maxPag=' + max + '&offsetPag=' + offset + '&searchText=' + searchText, {project: project._id.$oid, source: source._id.$oid, maxPag: max, offsetPag: offset})
+                        .success(function (data) {
+                                     deferred.resolve(data);
+                                 })
+                        .error(function (data, status) {
+                                   deferred.reject(new Error('Error loading projects data: ' + status));
+                               });
+                return deferred.promise;
+            },
+            queryFilterEvent:function (filterQuery) {
+                var deferred = $q.defer();
+//                $http.post('/mlogger/events/filter?projectId=' + project._id.$oid + '&sourceId=' + source._id.$oid + '&maxPag=' + max + '&offsetPag=' + offset + '&filterQuery=' + filterQuery, {project: project._id.$oid, source: source._id.$oid, maxPag: max, offsetPag: offset})
+//                        .success(function (data) {
+//                                     deferred.resolve(data);
+//                                 })
+//                        .error(function (data, status) {
+//                                   deferred.reject(new Error('Error loading projects data: ' + status));
+//                               });
+                $http.post("/mlogger/events/filter", filterQuery)
+                    .success(function (data) {
+                                 deferred.resolve(data);
+                             })
+                    .error(function (data, status) {
+                               deferred.reject(new Error('Error saving event data: ' + status));
+                           });
+                return deferred.promise;
             }
 
         }
     })
+
+    .directive('mloggerGridCellViewer', ['$compile', function ($compile) {
+        return {
+            restrict:'EA',
+            replace:false,
+            scope:{
+                cell:'=mloggerGridCellViewer',
+                searchTextCopy:'='
+            },
+            link:function (scope, element, attrs) {
+                var row = scope.row;
+                var cell = scope.cell;
+                if (cell.id.type === 'MESSAGE') {
+                    element.html($compile('<span ng-bind-html-unsafe="cell.value | highlight:searchTextCopy:caseSensitive"></span>')(scope));
+                }
+                else {
+                    element.html($compile('<span>{{ cell.value }}</span>')(scope));
+                }
+            }
+        };
+    }])
 

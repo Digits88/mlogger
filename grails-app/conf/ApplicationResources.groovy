@@ -32,8 +32,13 @@ modules = {
         resource url:'/lib/angular-ui/ui-bootstrap-tpls-0.5.0.js'
     }
 
+    angularUtils {
+        dependsOn 'angular, bootstrap'
+        resource url:'/lib/ui-utils/ui-utils.js'
+    }
+
     angularApplication {
-        dependsOn 'angular, ngUpload, underscore, angularUi'
+        dependsOn 'angular, ngUpload, underscore, angularUi, angularUtils'
         defaultBundle false
         resource url:'/js/mlogger-app/app.js'
         resource url:'/js/mlogger-app/log-viewer/log-viewer.js'
@@ -45,7 +50,7 @@ modules = {
     }
 
     application {
-        dependsOn 'angularApplication, jquery, bootstrap, angularUi'
+        dependsOn 'angularApplication, jquery, bootstrap, angularUi, jquery'
         resource url: 'css/test.css'
 
 //        getFilesForPath('js/').each {

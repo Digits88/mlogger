@@ -52,6 +52,7 @@ class LogViewerController {
                 max = maxPag
                 offset = offsetPag
             }
+            time = (startTime - System.nanoTime())/1000000000
         }
     }
 

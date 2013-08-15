@@ -66,7 +66,7 @@ class SourceController {
             try {
                 new File("${uploadedFile}").eachLine() { line, lineNumber ->
                     previewLogsList.add(line)
-                    if (lineNumber == 5)
+                    if (lineNumber == 10)
                         throw new Exception("return from closure")
             }
             } catch (Exception e) { }

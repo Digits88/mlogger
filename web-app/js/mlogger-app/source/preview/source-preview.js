@@ -23,8 +23,8 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             {
                 id: 1,
                 label: "(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)",
-                regex: "^(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)$",
-                head: ["DATE", "TIME", "THREAD", "LEVEL", "LOGGER", "Context", "MESSAGE"]
+                regex: "^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)$",
+                head: ["TIME", "THREAD", "LEVEL", "LOGGER", "CONTEXT", "MESSAGE"]
             },
             {
                 id: 2,
@@ -58,7 +58,7 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             $scope.eventsDetail.head = $scope.eventsDetail.mask.head;
             $scope.eventsDetail.sourceId = $routeParams.sourceId;
             EventFactory.save($scope.eventsDetail).then(function (data) {
-                $location.path('/');
+                $location.path('/projects');
             });
         };
 

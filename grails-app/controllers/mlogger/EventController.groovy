@@ -5,6 +5,9 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import javax.servlet.http.HttpServletResponse
 import grails.converters.JSON
 import org.bson.types.ObjectId
+import com.mongodb.DBCollection
+import com.mongodb.CommandResult
+import com.gmongo.GMongo
 
 class EventController {
 
@@ -75,28 +78,127 @@ class EventController {
         render (["message": "Events uploaded successfully"] as JSON)
     }
 
-    def search(Integer max, Integer offset, String searchText2) {
+    def search(String sourceId, Integer maxPag, Integer offsetPag, String searchText) {
+        log.info"aa " + searchText
+        if (!maxPag || maxPag == null) maxPag = 10
+        if (!offsetPag || offsetPag == null) offsetPag = 0
+        if (!params.sort) params.sort = "lineNumber"
+        if (!params.order) params.order = "asc"
+
 //        def mongo = new GMongo()
-
-            // Get a reference to the db
-            def db = mongo.getDB("sample")
-        log.info"search " + searchText2
-
-        def results
-        def resultTotal
-//        DBCollection coll = db.getCollection("event");
 //
-////        final DBObject textSearchCommand = new BasicDBObject();
-////        textSearchCommand.put("text", coll);
-////        textSearchCommand.put("search", searchText2);
-//        def textSearchCommand = [ "text": "event", "search": searchText2 ]
-//
+//            // Get a reference to the db
+//            def db = mongo.getDB("sample")
+//        def textSearchCommand = [ "text": "event", "search": searchText ]
+
+        // http://forum.springsource.org/showthread.php?138187-mongo-text-search-support
 //        final CommandResult commandResult = db.command(textSearchCommand);
 //        log.info"ss " +  commandResult.results
-//        log.info"ss " +  commandResult.results.count()
 
+        def regex = /${searchText}/
+        ObjectId objectId = new ObjectId(sourceId)
+        def totalEvents = Event.collection.find(source_id: objectId, MESSAGE:[$regex: regex]).count();
 
-        render(template: "log", model: [eventInstanceList: commandResult.results, eventFields: HEADER, eventTotal: 10, sourceInstanceId: params.id, time: (startTime - System.nanoTime())/1000000000, searchText: searchText2])
+//        def to = Event.collection.find(source_id: objectId, MESSAGE:[$regex: regex]).count()
+//        log.info"ss " +  to
 
+        def eventList = []
+//        Event.collection.find(source_id: objectId).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+//            eventList << log
+//        }
+
+        Event.collection.find(source_id: objectId, MESSAGE:[$regex: regex]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+            eventList << log
+        }
+
+        render(contentType: "text/json") {
+            logs = eventList
+            pagination = {
+                total = totalEvents
+                noOfPages = totalEvents/maxPag
+                max = maxPag
+                offset = offsetPag
+            }
+            time = (startTime - System.nanoTime())/1000000000
+        }
+    }
+
+    def filter(String sourceId, Integer maxPag, Integer offsetPag, String level) {
+        if (!maxPag || maxPag == null) maxPag = 10
+        if (!offsetPag || offsetPag == null) offsetPag = 0
+        if (!params.sort) params.sort = "lineNumber"
+        if (!params.order) params.order = "asc"
+
+//        def mongo = new GMongo()
+//
+//            // Get a reference to the db
+//            def db = mongo.getDB("sample")
+//        def textSearchCommand = [ "text": "event", "search": searchText ]
+//
+//        // http://forum.springsource.org/showthread.php?138187-mongo-text-search-support
+//        final CommandResult commandResult = db.command(textSearchCommand);
+//        log.info"ss " +  commandResult.results.getDocuments()
+
+        log.info "date " + params
+        log.info "date " + params.level
+//        def dt = Date.parse("yyyy-MM-dd'T'HH:mm:ss", params.dateFrom)
+//        log.info "date " + dt
+//        log.info "current date " + new Date()
+//        log.info "current date " + new Date() -5
+        ObjectId objectId = new ObjectId(sourceId)
+        def totalEvents = Event.collection.find(source_id: objectId, LEVEL: params.level).count();
+        def eventList = []
+//        Event.collection.find(source_id: objectId, [$gte: new Date()]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+//            eventList << log
+//        }
+        Event.collection.find(source_id: objectId, LEVEL: params.level).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+            eventList << log
+        }
+//        log.info"collection " + eventList
+        render(contentType: "text/json") {
+            logs = eventList
+            pagination = {
+                total = totalEvents
+                noOfPages = totalEvents/maxPag
+                max = maxPag
+                offset = offsetPag
+            }
+            time = (startTime - System.nanoTime())/1000000000
+        }
+    }
+
+    def list(String sourceId, Integer maxPag, Integer offsetPag) {
+        if (!maxPag || maxPag == null) maxPag = 10
+        if (!offsetPag || offsetPag == null) offsetPag = 0
+        if (!params.sort) params.sort = "lineNumber"
+        if (!params.order) params.order = "asc"
+
+        ObjectId objectId = new ObjectId(sourceId)
+        def eventList = []
+        def totalEvents
+        if (params.searchText && params.searchText != "") {
+            def regex = /${params.searchText}/
+            totalEvents = Event.collection.find(source_id: objectId, MESSAGE:[$regex: regex]).count();
+            Event.collection.find(source_id: objectId, MESSAGE:[$regex: regex]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+                eventList << log
+            }
+        } else {
+            totalEvents = Event.collection.find(source_id: objectId).count();
+            Event.collection.find(source_id: objectId).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+                eventList << log
+            }
+        }
+
+        render(contentType: "text/json") {
+            logs = eventList
+            pagination = {
+                total = totalEvents
+                noOfPages = totalEvents/maxPag
+                max = maxPag
+                offset = offsetPag
+            }
+            searchText = params.searchText
+            time = (startTime - System.nanoTime())/1000000000
+        }
     }
 }
