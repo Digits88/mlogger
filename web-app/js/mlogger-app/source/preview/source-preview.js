@@ -22,33 +22,27 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
         $scope.masks = [
             {
                 id: 1,
-                label: "(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)",
+                label: "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)",
                 regex: "^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) (\\[.*\\]) (.*) (\\S*) (\\(.*\\)) - (.*)$",
                 head: ["TIME", "THREAD", "LEVEL", "LOGGER", "CONTEXT", "MESSAGE"]
             },
             {
                 id: 2,
-                label: "(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (.*)",
-                regex: "^(\\d{4}-\\d{2}-\\d{2}) (\\d{2}:\\d{2}:\\d{2},\\d{3}) (.*)$",
-                head: ["DATE", "TIME", "TEXT"]
+                label: "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) (.*)",
+                regex: "^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) (.*)$",
+                head: ["TIME", "MESSAGE"]
             },
             {
                 id: 3,
                 label: "(\\S*) - - \\[(.*)] \"....? (\\S*) .*\" (\\d*) ([-0-9]*) (\".*\")",
-                regex: '^(\\S*) - - \\[(.*)] "....? (\\S*) .*" (\\d*) ([-0-9]*) (".*")?',
-                head: ["HOST", "DATE", "HTTP", "STATUS", "SIZE", "AGENT"]
+                regex: '^(\\S*) - - \\[(.*)] \\"....? (\\S*) .*\\" (\\d*) ([-0-9]*) (\\".*\\")?',
+                head: ["HOST", "TIME", "HTTP", "STATUS", "SIZE", "MESSAGE"]
             },
             {
                 id: 4,
                 label: "Default",
                 regex: "^(.*)$",
                 head: ["EVENT"]
-            },
-            {
-                id: 5,
-                label: '^(\\S+) \\S+ \\S+ \\[(.*?)\\] "(\\S+).*?" \\d+ \\d+ "(.*?)" "(.*?)"',
-                regex: '^(\\S+) \\S+ \\S+ [(.*?)] "(\\S+).*?" \\d+ \\d+ "(.*?)" "(.*?)"',
-                head: ['HOST','TIME','PATH','CODE','BYTES','REFERER', 'USER_AGENT']
             }
         ];
 
@@ -62,10 +56,10 @@ angular.module('source.preview', ['sourceService', 'ui.bootstrap'])
             });
         };
 
-        $scope.heads = ["EVENT"];
-        $scope.logs = ["2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] TEST phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:","  receive [LoggingInInterceptor, AttachmentInInterceptor]","  post-stream [StaxInInterceptor]","2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] DEBUG phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain test org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:","2012-09-27 01:00:00,028 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Running shopping basket clean up"];
+//        $scope.heads = ["EVENT"];
+//        $scope.logs = ["2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] TEST phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:","  receive [LoggingInInterceptor, AttachmentInInterceptor]","  post-stream [StaxInInterceptor]","2012-09-27 01:00:00,612 [quartzScheduler_Worker-3] DEBUG phase.PhaseInterceptorChain (DC Job KCI Status Update) - Chain test org.apache.cxf.phase.PhaseInterceptorChain@307bcef0 was created. Current flow:","2012-09-27 01:00:00,028 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Running shopping basket clean up"];
 
-        addGridData($scope.heads, $scope.logs);
+        //addGridData($scope.heads, $scope.logs);
 
         $scope.watchRadioButtonChange = function(newValue) {
             var mask = _.filter($scope.masks, function(obj){ return obj.id == newValue; });

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
+angular.module('log-viewer', ['ui.highlight', 'ui.keypress', 'ui.bootstrap'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -28,41 +28,45 @@ angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
         var logger = Logger.getLogger('LogViewerCtrl');
 
         populateProjectsData();
-        $scope.oneAtATime = true;
+        $scope.oneAtATime = false;
         $scope.filter = "";
         $scope.singleModel = 0;
         $scope.searchText = "";
+        $scope.searchFlag = false;
+        $scope.stackTraceShowed = false;
 
         $scope.viewSource = function (project, source) {
             $scope.searchTextCopy = "";
             $scope.searchText = "";
             //$location.path('/viewer/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
             LogViewerFactory.queryEvent(project, source, 0, 10, $scope.searchText).then(function (data) {
+                $scope.currentPage = 1;
+                $scope.maxSize = 10;
                 populateGridData(data, project, source);
             });
         };
 
-    $scope.filters = [
-        {id:'1', filterName:'Time'},
-        {id:'2', filterName:'Time | Level'},
-        {id:'3', filterName:'Time | User'}
-    ];
+        $scope.filters = [
+            {id:'1', filterName:'Time'},
+            {id:'2', filterName:'Time | Level'},
+            {id:'3', filterName:'Time | User'}
+        ];
 
-    $scope.open = function() {
-      $timeout(function() {
-        $scope.opened = true;
-      });
-    };
+        $scope.open = function() {
+          $timeout(function() {
+            $scope.opened = true;
+          });
+        };
 
-    $scope.$watch('filter', function (newVal, oldVal) {
-        if (newVal != oldVal) {
-            if(angular.isDefined(newVal.id)) {
-                $scope.filterId = newVal.id;
-            } else {
-                $scope.filterId = "";
+        $scope.$watch('filter', function (newVal, oldVal) {
+            if (newVal != oldVal) {
+                if(angular.isDefined(newVal.id)) {
+                    $scope.filterId = newVal.id;
+                } else {
+                    $scope.filterId = "";
+                }
             }
-        }
-    });
+        });
 
         $scope.filterEvent = function (project, source, filterQuery) {
             $scope.filterQuery.sourceId = $scope.gridData.project._id.$oid;
@@ -77,13 +81,16 @@ angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
               });
         };
 
-        $scope.searchEvent = function (project, source, searchText) {
+        $scope.searchEvent = function () {
             //$location.path('/viewer/events').search({projectId: project._id.$oid, sourceId: source._id.$oid, max: 10, offset: 0});
 //            LogViewerFactory.querySearchEvent($scope.gridData.project, $scope.gridData.source, 0, 10, searchText).then(function (data) {
 //                $scope.searchTextCopy = angular.copy(searchText);
 //                populateGridData(data, $scope.gridData.project, $scope.gridData.source);
 //            });
             LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, 0, 10, $scope.searchText).then(function (data) {
+                $scope.searchFlag = true;
+                $scope.currentPage = 1;
+                $scope.maxSize = 10;
                 $scope.searchTextCopy = angular.copy(data.searchText);
                 populateGridData(data, $scope.gridData.project, $scope.gridData.source);
             });
@@ -103,7 +110,12 @@ angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
                     head = mask[0].head[i];
                     addCell(head, log[head], cells);
                 }
-                addRow(cells, index, rows)
+                addRow(cells, index, rows);
+//                if(!_.isUndefined(log.stackTrace)) {
+//                    cells = [];
+//                    addCell("stackTrace", log.stackTrace, cells);
+//                    addRow(cells, index, rows)
+//                }
             });
 
             addGridData(mask[0].head, rows, project, source, data.pagination, data.time);
@@ -177,15 +189,22 @@ angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
             return Math.ceil($scope.gridData.pagination.total/$scope.gridData.pagination.noOfPages);
         };
 
-        $scope.$watch("currentPage", function(newValue) {
-            if(!_.isUndefined($scope.gridData)) {
-                //$location.path('/mlogger/events').search({projectId: $scope.gridData.project._id.$oid, sourceId: $scope.gridData.source._id.$oid, max: $scope.gridData.pagination.max, offset: newValue * $scope.gridData.pagination.max});
-                LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, newValue * $scope.gridData.pagination.max, $scope.gridData.pagination.max, $scope.searchText).then(function (data) {
-                    $scope.searchTextCopy = angular.copy(data.searchText);
-                    populateGridData(data, $scope.gridData.project, $scope.gridData.source);
-                });
+        $scope.$watch("currentPage", function(newValue, oldValue) {
+            if( newValue != oldValue ) {
+                if(!_.isUndefined($scope.gridData) && !$scope.searchFlag) {
+                    //$location.path('/mlogger/events').search({projectId: $scope.gridData.project._id.$oid, sourceId: $scope.gridData.source._id.$oid, max: $scope.gridData.pagination.max, offset: newValue * $scope.gridData.pagination.max});
+                    LogViewerFactory.queryEvent($scope.gridData.project, $scope.gridData.source, newValue * $scope.gridData.pagination.max, $scope.gridData.pagination.max, $scope.searchText).then(function (data) {
+                        $scope.searchTextCopy = angular.copy(data.searchText);
+                        populateGridData(data, $scope.gridData.project, $scope.gridData.source);
+                    });
+                }
+                $scope.searchFlag = false;
             }
         });
+
+        $scope.toggleStackTrace = function () {
+            $scope.stackTraceShowed = !$scope.stackTraceShowed;
+        };
     }])
 // restful r basically models in angular http://www.yearofmoo.com/2012/08/use-angularjs-to-power-your-web-application.html#web-applications-not-websites
 //http://ngmodules.org/modules/restangular
@@ -264,18 +283,27 @@ angular.module('log-viewer', ['ui.highlight','ui.bootstrap'])
     .directive('mloggerGridCellViewer', ['$compile', function ($compile) {
         return {
             restrict:'EA',
-            replace:false,
+            replace:true,
             scope:{
                 cell:'=mloggerGridCellViewer',
-                searchTextCopy:'='
+                searchTextCopy:'=',
+                leng:'=',
+                stackTraceShowed:'='
             },
             link:function (scope, element, attrs) {
-                var row = scope.row;
                 var cell = scope.cell;
                 if (cell.id.type === 'MESSAGE') {
+                    attrs.$set('colspan', '1');
                     element.html($compile('<span ng-bind-html-unsafe="cell.value | highlight:searchTextCopy:caseSensitive"></span>')(scope));
                 }
+//                else if (cell.id.type === 'stackTrace') {
+//                    attrs.$set('colspan', scope.leng);
+//                    attrs.$set('ng-show', scope.stackTraceShowed);
+//                    element.addClass('stackTrace');
+//                    element.html($compile('<span ng-bind-html-unsafe="cell.value | newline"></span>')(scope));
+//                }
                 else {
+                    attrs.$set('colspan', '1');
                     element.html($compile('<span>{{ cell.value }}</span>')(scope));
                 }
             }

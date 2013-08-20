@@ -101,7 +101,11 @@
             %{--</div>--}%
             %{--<div class="col-lg-2"></div>--}%
         %{--</footer>--}%
-  		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
+    %{--<div id="loadingWidget" class="row-fluid ui-corner-all" style="padding: 0 .7em; display: none;" loading-widget >--}%
+          %{--<div class="loadingContent">--}%
+              %{--<div id="spinner" class="spinner"><p style="margin-top: -18px;">Processing data ...</p></div>--}%
+          %{--</div>--}%
+      %{--</div>--}%
   		<r:layoutResources />
     </body>
 </html>

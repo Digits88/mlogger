@@ -39,6 +39,9 @@ lastEvent = ''
 #mapList = ['DATE','TIME','HOST','LEVEL','CLASS','THREAD', 'MESSAGE']
 #mapList = sys.argv[4]
 #mapList = ['DATE', 'TIME', 'TEXT']
+print sys.argv[2]
+print sys.argv[3]
+print sys.argv[4]
 
 aa = sys.argv[4].strip("[]")
 mapList = [x.strip() for x in aa.split(',')]
@@ -115,6 +118,7 @@ print("Total time of log insertion: %s" % (toc - tic))
 print("Start creating index 'source_id: 1, lineNumber: 1'")
 db["event"].create_index([("source_id", ASCENDING), ("lineNumber", ASCENDING)])
 db["event"].create_index([("source_id", ASCENDING), ("lineNumber", ASCENDING), ("MESSAGE", ASCENDING)])
+#db["event"].create_index([("source_id", ASCENDING), ("lineNumber", ASCENDING), ("stackTrace", ASCENDING)])
 print("Total time of creating insertion: %s" % (toc - tic))
 
 print("Total time of all processes: %s" % (toc - tic))

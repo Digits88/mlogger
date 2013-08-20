@@ -8,6 +8,8 @@ import org.bson.types.ObjectId
 import com.mongodb.DBCollection
 import com.mongodb.CommandResult
 import com.gmongo.GMongo
+import java.text.*;
+import org.joda.time.format.*
 
 class EventController {
 
@@ -48,6 +50,7 @@ class EventController {
         def storagePathDirectory = new File(pythonPath)
         if(storagePathDirectory.exists()) {
             log.info"***************** Start Python Script *****************"
+            log.info" dd " + params.head
             Process process = ["C:\\tools\\Python\\python.exe", pythonPath, uploadedFile, sourceInstance.id, params.mask.regex, params.head].execute()
 
             def (output, error) = new StringWriter().with { o -> // For the output
@@ -138,9 +141,28 @@ class EventController {
 //        // http://forum.springsource.org/showthread.php?138187-mongo-text-search-support
 //        final CommandResult commandResult = db.command(textSearchCommand);
 //        log.info"ss " +  commandResult.results.getDocuments()
+//        def input = params.dateFrom
+//        def fmt_in = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+//        def fmt_out = ISODateTimeFormat.dateTime()
+//        println fmt_out.print(fmt_in.parseDateTime(input))
 
-        log.info "date " + params
-        log.info "date " + params.level
+//        def input = params.dateFrom
+//        def fmt_in = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+//        def fmt_out = ISODateTimeFormat.dateTime()
+//        def dateFrom = fmt_in.parseDateTime(input)
+//        println fmt_out.print(fmt_in.parseDateTime(input))
+
+        DateTimeFormatter parser2 = ISODateTimeFormat.dateTime();
+        String jtdate = "2010-01-01T12:00:00+01:00";
+        org.joda.time.DateTime dateFrom = parser2.parseDateTime(params.dateFrom)
+        System.out.println(parser2.parseDateTime(params.dateFrom));
+
+//        TimeZone tz = TimeZone.getTimeZone("UTC");
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        df.setTimeZone(tz);
+//        String nowAsISO = df.parse(params.dateFrom);
+//        log.info "nowAsISO " + nowAsISO
+//        log.info"params.dateFrom " + params.dateFrom
 //        def dt = Date.parse("yyyy-MM-dd'T'HH:mm:ss", params.dateFrom)
 //        log.info "date " + dt
 //        log.info "current date " + new Date()
@@ -148,9 +170,10 @@ class EventController {
         ObjectId objectId = new ObjectId(sourceId)
         def totalEvents = Event.collection.find(source_id: objectId, LEVEL: params.level).count();
         def eventList = []
-//        Event.collection.find(source_id: objectId, [$gte: new Date()]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
-//            eventList << log
-//        }
+        Event.collection.find(source_id: objectId, [$gte: dateFrom]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+            eventList << log
+        }
+        log.info("aaa " + eventList)
         Event.collection.find(source_id: objectId, LEVEL: params.level).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
             eventList << log
         }

@@ -6,7 +6,6 @@
         <!--</accordion-group>-->
     <!--</accordion>-->
 
-
     <ul class="nav" ng-repeat="project in projects">
         <li class="has-menu" ng-show="project.sources">
             <a href="">{{ project.name }}</a>
@@ -20,7 +19,7 @@
 </nav>
 <section class="col-lg-10">
     <div class="header" style="padding: 4px 15px;">
-        <h3>Log Viewer for source {{gridData.source.name}} </h3>
+        <h3>Log Viewer for source {{gridData.source.name}} <span loading-widget class="spinner" style="display: none; float: right"></span></h3>
     </div>
 
     <!--<article class="sectionArticleFilter" style="text-align: justify;">-->
@@ -83,9 +82,9 @@
 
         <div class="col-lg-12 col-reset" style="margin-bottom: 18px">
             <div class="input-group">
-                <input ng-model="searchText" type="text" class="form-control input-sm">
+                <input ng-model="searchText" type="text" class="form-control input-sm" ui-keyup="{'enter':'searchEvent()'}">
                 <span class="input-group-btn">
-                    <button class="btn btn-success btn-sm" type="button" ng-click="searchEvent(project, source, searchText)">Search</button>
+                    <button class="btn btn-success btn-sm" type="button" ng-click="searchEvent()">Search</button>
                 </span>
             </div>
         </div>
@@ -100,13 +99,16 @@
                 <tbody>
                     <tr ng-repeat="row in gridData.rows">
                         <!--<td ng-repeat="cell in row.cells">{{cell.value}}</td>-->
-                        <td ng-repeat="cell in row.cells" mlogger-grid-cell-viewer="cell" search-text-copy="searchTextCopy">{{cell.value}}</td>
+                        <td ng-repeat="cell in row.cells" mlogger-grid-cell-viewer="cell" search-text-copy="searchTextCopy" leng="gridData.headers.length" stack-trace-showed="stackTraceShowed" colspan="1"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <span ng-show="gridData.rows">
-            <pagination  class="pull-left" rotate="false" num-pages="gridData.pagination.noOfPages" current-page="currentPage" max-size="maxSize" boundary-links="true" style="cursor:pointer"></pagination>
+            <span ng-show="gridData.pagination.total >= maxSize">
+                <pagination class="pull-left" rotate="false" num-pages="gridData.pagination.noOfPages" current-page="currentPage" max-size="maxSize" boundary-links="true" style="cursor:pointer"></pagination>
+            </span>
+            <!--<button class="btn btn-success btn-sm" type="button" ng-click="toggleStackTrace()">Hide StackTrace</button>-->
             <span class="pull-right" style="line-height: 80px;">Time: <strong>{{ gridData.time }}</strong> s | Total of logs: <strong>{{ gridData.pagination.total }}</strong></span>
         </span>
     </article>

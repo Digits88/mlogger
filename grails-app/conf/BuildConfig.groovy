@@ -60,5 +60,6 @@ grails.project.dependency.resolution = {
 
         compile ':cache:1.0.1'
         compile ":mongodb:1.3.0"
+        compile ":joda-time:1.4"
     }
 }
