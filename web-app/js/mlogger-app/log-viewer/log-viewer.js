@@ -35,6 +35,10 @@ angular.module('log-viewer', ['ui.highlight', 'ui.keypress', 'ui.bootstrap'])
         $scope.searchFlag = false;
         $scope.stackTraceShowed = false;
 
+        $scope.resetFilter = function() {
+            $scope.viewSource($scope.gridData.project, $scope.gridData.source);
+        };
+
         $scope.viewSource = function (project, source) {
             $scope.searchTextCopy = "";
             $scope.searchText = "";
@@ -47,9 +51,9 @@ angular.module('log-viewer', ['ui.highlight', 'ui.keypress', 'ui.bootstrap'])
         };
 
         $scope.filters = [
-            {id:'1', filterName:'Time'},
-            {id:'2', filterName:'Time | Level'},
-            {id:'3', filterName:'Time | User'}
+            {id:'1', filterName:'Level'}
+//            {id:'2', filterName:'Time | Level'},
+//            {id:'3', filterName:'Time | User'}
         ];
 
         $scope.open = function() {
@@ -69,7 +73,7 @@ angular.module('log-viewer', ['ui.highlight', 'ui.keypress', 'ui.bootstrap'])
         });
 
         $scope.filterEvent = function (project, source, filterQuery) {
-            $scope.filterQuery.sourceId = $scope.gridData.project._id.$oid;
+            $scope.filterQuery.sourceId = $scope.gridData.source._id.$oid;
             $scope.filterQuery.projectId = $scope.gridData.project._id.$oid;
             $scope.filterQuery.maxPag = 0;
             $scope.filterQuery.offsetPag = 10;

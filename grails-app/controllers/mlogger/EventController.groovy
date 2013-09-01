@@ -152,10 +152,10 @@ class EventController {
 //        def dateFrom = fmt_in.parseDateTime(input)
 //        println fmt_out.print(fmt_in.parseDateTime(input))
 
-        DateTimeFormatter parser2 = ISODateTimeFormat.dateTime();
-        String jtdate = "2010-01-01T12:00:00+01:00";
-        org.joda.time.DateTime dateFrom = parser2.parseDateTime(params.dateFrom)
-        System.out.println(parser2.parseDateTime(params.dateFrom));
+//        DateTimeFormatter parser2 = ISODateTimeFormat.dateTime();
+//        String jtdate = "2010-01-01T12:00:00+01:00";
+//        org.joda.time.DateTime dateFrom = parser2.parseDateTime(params.dateFrom)
+//        System.out.println(parser2.parseDateTime(params.dateFrom));
 
 //        TimeZone tz = TimeZone.getTimeZone("UTC");
 //        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -167,17 +167,16 @@ class EventController {
 //        log.info "date " + dt
 //        log.info "current date " + new Date()
 //        log.info "current date " + new Date() -5
+//        Event.collection.find(source_id: objectId, [$gte: dateFrom]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
+//            eventList << log
+//        }
         ObjectId objectId = new ObjectId(sourceId)
         def totalEvents = Event.collection.find(source_id: objectId, LEVEL: params.level).count();
         def eventList = []
-        Event.collection.find(source_id: objectId, [$gte: dateFrom]).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
-            eventList << log
-        }
-        log.info("aaa " + eventList)
         Event.collection.find(source_id: objectId, LEVEL: params.level).limit(maxPag).skip(offsetPag).sort(lineNumber: 1).each { log ->
             eventList << log
         }
-//        log.info"collection " + eventList
+        log.info"collection " + eventList
         render(contentType: "text/json") {
             logs = eventList
             pagination = {
