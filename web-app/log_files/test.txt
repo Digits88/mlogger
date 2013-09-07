@@ -13,6 +13,7 @@
 2012-09-27 01:00:00,434 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 135763 to request.
 2012-09-27 01:00:00,440 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 135765 to request.
 2012-09-27 01:00:00,442 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 135764 to request.
+2012-09-27 01:00:00,451 [quartzScheduler_Worker-4] 2012-09-27 01:00:00,451 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC DEBUG loader.Loader (DC Job KCI Status Update) - adding cofId 140720 to request.
 2012-09-27 01:00:00,454 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 141452 to request.
 2012-09-27 01:00:00,473 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 140737 to request.
 2012-09-27 01:00:00,475 [quartzScheduler_Worker-3] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 140737 to request.
@@ -200,6 +201,9 @@ Payload: <?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="
 2012-09-27 01:00:00,974 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Removed the following orders from the system: 
 2012-09-27 01:00:00,977 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Order ID: 8acbc01f39f0f8d6013a021b1a2700d1 Order Ref: G9SYTKAX Reason: No location
 2012-09-27 01:00:00,977 [quartzScheduler_Worker-4] INFO  rolo.BasketCleanUpJob (DC Job Basket Cleanup) - Finished cleaning up basket
+2012-09-27 02:00:00,019 [quartzScheduler_Worker-6] INFO  rolo.OrderMonitorJob (DC Job Order Monitor) - Started Order Monitor Job
+2012-09-27 02:00:00,312 [quartzScheduler_Worker-6] DEBUG2012-09-27 02:00:00,312 [ jdbc.AbstractBatcher (DC quartzScheduler_Worker-10] DEBUG Job Order Monitor) - about to open ResultSet (open ResultSets: 0, globally: 0)
+beagle.OrderService (DC Job KCI Status Update) - getOrderStatusForLineItems called.
 2012-09-27 02:00:00,347 [Job KCI Status UpdatequartzScheduler_Worker-6] DEBUG jdbc.AbstractBatcher (DC ) - adding cofId 136467 to request.
 2012-09-27 02:00:00,368 [quartzScheduler_Worker-10] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136102 to request.
 2012-09-27 02:00:00,371 [quartzScheduler_Worker-10] DEBUG beagle.OrderService (DC Job KCI Status Update) - adding cofId 136218 to request.
