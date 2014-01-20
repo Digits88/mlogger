@@ -5,14 +5,19 @@ The aim of the project is to develop user-friendly log management system to addr
 
 Technologies Used
 ------------------
-+ [Grails](http://grails.org/)
-+ [AngularJS](http://angularjs.org/)
-+ [Python](http://www.python.org/)
-+ [MongoDB](http://www.mongodb.org/)
-+ [HTML5](http://www.w3.org/TR/2011/WD-html5-20110525/)
-+ [CSS3](http://www.w3.org/TR/2001/WD-css3-roadmap-20010523/)
-+ [Bootstrap](http://getbootstrap.com/)
-+ [Grunt](http://gruntjs.com/)
+* **Client Side:**
+    * [AngularJS](http://angularjs.org/)
+    * [HTML5](http://www.w3.org/TR/2011/WD-html5-20110525/)
+    * [CSS3](http://www.w3.org/TR/2001/WD-css3-roadmap-20010523/)
+    * [Bootstrap](http://getbootstrap.com/)
+
+* **Server Side:**
+    * [Grails](http://grails.org/)
+    * [Python](http://www.python.org/)
+    * [MongoDB](http://www.mongodb.org/)
+
+* **Development & Deployment:**
+    * [Grunt](http://gruntjs.com/)
 
 Architecture Diagram
 --------------------
