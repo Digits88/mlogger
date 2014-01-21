@@ -1,3 +1,5 @@
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/martinmicunda/mlogger-old/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 mLogger
 =================
 
@@ -29,7 +31,3 @@ Screenshots
 ![mLogger screenshot](/project-resources/images/mlogger.jpg "mLogger screenshot")
 ![mLogger screenshot](/project-resources/images/mlogger2.jpg "mLogger screenshot")
 ![mLogger screenshot](/project-resources/images/mlogger3.jpg "mLogger screenshot")
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/martinmicunda/mlogger-old/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
